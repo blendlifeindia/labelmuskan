@@ -52,6 +52,6 @@ The local preview accepts a synthetic email/password and serves fake Auth/API ro
 
 ## Deployment
 
-Nginx serves static files from `/var/www/labelmuskan/`. Copy all files in `public/` together to a staging directory, then promote them together. `deploy/nginx.conf` provides the initial HTTP configuration; the VPS configuration includes Certbot-managed TLS. Do not overwrite its certificate settings when deploying frontend updates. HTTPS renewal runs through `certbot.timer`; the renewal dry run passed during initial setup.
+Nginx serves the release selected by `/var/www/labelmuskan-current`, currently `/var/www/labelmuskan-releases/20261005-studio/`. Copy all files in `public/` together to a new release directory, then atomically update the current symlink. The original frontend remains in `/var/www/labelmuskan/` for recovery. `deploy/nginx.conf` provides the initial HTTP configuration; the live VPS configuration includes the release root and Certbot-managed TLS. Do not overwrite its certificate settings when deploying frontend updates. HTTPS renewal runs through `certbot.timer`; the renewal dry run passed during initial setup.
 
 The full user brief is saved in `requirements/studio-dashboard.txt`.
