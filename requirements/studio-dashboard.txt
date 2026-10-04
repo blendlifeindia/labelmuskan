@@ -1,0 +1,281 @@
+Build a simple, clean and easy-to-use backend operational dashboard for Label Muskan, a designer clothing label/boutique.
+
+The main goal is to make the dashboard extremely simple for the studio team to update every day, while giving the owner a clear picture of orders, production, expenses, purchases, salaries and monthly profit/loss.
+
+The dashboard should NOT feel like complicated accounting software. Staff should be able to update information quickly, ideally entering each piece of information only once, with the rest of the dashboard updating automatically.
+
+1. ORDERS — Main Dashboard
+This should be the most important section.
+
+Every order should have:
+
+Order number
+Client name
+Order date
+Delivery date
+Outfit/product
+Selling price
+Advance received
+Balance payment
+Payment status
+Production status
+Assigned staff
+Notes
+Most important: Orders should automatically be sorted by earliest delivery date first, so the most urgent/closest deliveries always appear at the top.
+
+Production status options:
+
+New Order
+Measurement Pending
+Fabric Pending
+Cutting
+Stitching
+Embroidery/Handwork
+Trial Pending
+Alteration
+Ready
+Delivered
+Cancelled
+The home page should clearly show:
+
+Deliveries due today
+Deliveries due in the next 3 days
+Pending orders
+Overdue orders
+2. DAILY / WEEKLY OVERVIEW
+The Home dashboard should show a very simple snapshot.
+
+today
+
+Orders received
+Deliveries due
+Payments received
+Expenses
+Orders currently in production
+This Week
+
+Number of orders
+Total order value
+Number of deliveries
+Pending orders
+Pending payments
+Avoid unnecessary graphs and complicated analytics.
+
+3. EXPENSES
+Staff will update expenses on a daily basis.
+
+Keep this extremely simple:
+
+Date
+Expense description
+Category
+Amount
+Paid by
+Payment mode
+Notes
+Expense categories:
+
+Fabric
+Tailoring
+Embroidery
+Dyer
+Packaging
+Courier
+Staff
+Rent
+Electricity
+Marketing/PR
+Travel
+Food/Hospitality
+Repairs
+Miscellaneous
+The dashboard should automatically calculate:
+
+Daily expenses
+Weekly expenses
+Monthly expenses
+Category-wise expenses
+4. PURCHASES
+Keep purchases separate from general expenses.
+
+Purchase fields:
+
+Date
+Vendor
+Item
+Category
+Quantity
+Amount
+For which order / Stock
+Payment status
+Notes
+Categories can include:
+
+Fabric
+Lining
+Trims
+Lace
+Buttons
+Zips
+Embroidery material
+Packaging
+Accessories
+Other
+This should allow us to understand how much we are spending specifically on fabrics and production materials.
+
+5. SALARIES
+Keep salary tracking simple.
+
+For each staff member:
+
+Name
+Salary
+Payment frequency
+Payment date
+Amount paid
+Advance, if any
+Deduction, if any
+Balance
+Notes
+Since salaries may be paid weekly or monthly, the dashboard should automatically show:
+
+Salary paid this week
+Salary paid this month
+Total salary cost for the month
+Pending salary payments
+6. PAYMENTS / OUTSTANDING
+Create a simple section showing money that is still pending from clients.
+
+For every order:
+
+Total order value
+Amount received
+Balance
+Payment due date
+Payment status
+The dashboard should show:
+
+Total Sales: ₹X
+Amount Collected: ₹X
+Outstanding: ₹X
+
+Also show a list of clients with pending payments.
+
+7. MONTHLY PROFIT & LOSS
+At the end of every month, the dashboard should automatically combine all the information and give a simple monthly summary.
+
+Example:
+
+OCTOBER
+
+SALES
+
+Total Orders: 47
+Total Sales: ₹21,40,000
+Amount Collected: ₹17,80,000
+Outstanding: ₹3,60,000
+EXPENSES
+
+Fabric & Purchases: ₹4,20,000
+Production/Tailoring: ₹2,10,000
+Salaries: ₹3,40,000
+Rent: ₹1,20,000
+Marketing/PR: ₹80,000
+Packaging/Courier: ₹45,000
+Other Expenses: ₹65,000
+Total Expenses: ₹12,80,000
+
+Estimated Profit: ₹8,60,000
+
+Profit Margin: 40.2%
+
+This should be generated automatically from the data entered throughout the month.
+
+8. ORDER-WISE PROFIT
+If possible, add an order-level costing section.
+
+For each order, we should be able to see:
+
+Selling price
+Fabric cost
+Tailoring cost
+Embroidery/handwork cost
+Other production costs
+Packaging
+Total estimated cost
+Gross profit
+This will help identify which products/orders are actually profitable.
+
+9. CLIENT DATABASE
+Keep this simple.
+
+Client name
+Phone number
+Instagram
+City
+Measurements
+Previous orders
+Total orders
+Total amount spent
+Preferences
+Notes
+When an existing client places a new order, their previous information should be easy to access.
+
+10. ALTERATIONS / RETURNS
+Have a small section for:
+
+Order number
+Client
+Issue
+Date received
+Assigned person
+Expected completion
+Status
+Additional cost, if any
+11. INVENTORY — OPTIONAL / CAN BE ADDED LATER
+Keep inventory basic initially.
+
+For fabrics/materials:
+
+Item
+Colour
+Quantity available
+Quantity purchased
+Quantity used
+Balance
+Cost
+Vendor
+This can be expanded later if required.
+
+MOST IMPORTANT DESIGN PRINCIPLE
+The dashboard should be simple enough that staff actually update it every day.
+
+Do not make staff enter the same information multiple times.
+
+For example:
+
+If staff enters:
+
+Order #124 — ₹48,000 — Delivery 15 Oct
+
+that information should automatically flow into:
+
+Orders
+Sales
+Payments
+Monthly summary
+Profit calculation
+Similarly, when a ₹12,000 fabric purchase is entered, it should automatically contribute to the monthly expense/profit calculation.
+
+HOME PAGE SHOULD ANSWER ONLY THESE QUESTIONS:
+What orders are coming up?
+What needs attention today?
+How much have we sold this month?
+How much have we collected?
+How much is pending?
+How much have we spent?
+How much profit/loss have we made?
+Keep the interface minimal, clean and visually easy to understand, with as little manual calculation as possible.
+
+The priority is operational clarity, not complicated analytics.
+

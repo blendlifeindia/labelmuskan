@@ -1,32 +1,57 @@
-# Label Muskan operations
+# Label Muskan studio operations
 
-Private staff dashboard for orders, production, inventory, customers, and expenses. Uses Supabase Auth and Postgres with row-level security; static frontend served by Nginx on the RackNerd VPS.
+Private daily operations dashboard at https://labelmuskan.online. Built around orders and delivery urgency, with simple forms and automatic balances and summaries. No graphs or separate production entry are needed.
 
 ## Approved infrastructure
 
 - GitHub: https://github.com/blendlifeindia/labelmuskan
 - Supabase: https://supabase.com/dashboard/project/xybqwszhkbiucgextwog
-- VPS: 107.173.55.162 (Ubuntu 24.04)
-- Domain: https://labelmuskan.online
+- RackNerd Ubuntu VPS: 107.173.55.162
+- Domain: labelmuskan.online (Spaceship DNS)
 
-## Local preview
+See AGENTS.md for connection restrictions. Private SSH credentials stay in ignored `.deployment/`; never commit them. `public/config.js` contains only a public publishable key. No service-role keys are used in the browser.
 
-Run `npm start` with Node 22 or newer. No npm packages are needed. `npm run check` checks JavaScript syntax.
+## Daily workflow
 
-`public/config.js` contains only the public Supabase publishable key. Never add a service-role key to the frontend. SSH credentials stay in the ignored `.deployment/` directory.
+1. **New order:** choose an existing client or add a client inside the same form. Enter order and delivery dates, outfit, selling price, production stage, assigned staff, and any advance received. The client, order, and advance are saved in one database transaction.
+2. **Orders:** automatically sorted by earliest delivery date. Use Pending, Today, Next 3 days, Overdue, or All. Open an order to update production, record another payment, or inspect direct costs and gross profit.
+3. **Expenses:** daily studio expenses with category, paid-by, payment mode, and optional order link. Enter materials in Purchases and payroll in Salaries, rather than repeating the same cost here.
+4. **Purchases:** record materials with vendor, category, quantity, amount, payment status, and optional order link. Stock purchases can stay unallocated. The amount enters monthly costs once.
+5. **Salaries:** create one record per staff member and weekly/monthly pay period. Record salary payments and advances against that period. Salary less deduction is the obligation; both salary payments and advances reduce its balance.
+6. **Clients:** contact details, Instagram, measurements, preferences, notes, order history, total orders, and total spent. Previous client information is reused for new orders.
+7. **Alterations & returns:** choose the order; its client is reused. Track the issue, received date, assigned person, expected completion, status, and studio cost. The added cost enters order/monthly costs once, so do not repeat it in Expenses.
+8. **Inventory:** a basic manual stock register with colour, quantity, unit cost, vendor, and low-stock threshold. Automated material purchase/use movements can be added later.
 
-## Staff access
+## Calculations
 
-Create a confirmed user through Supabase Authentication. Then add the user's UUID to `public.lm_staff` through the Supabase dashboard or an authorized SQL connection. Only allowlisted staff can read or write operational data. Anonymous users cannot access operational tables. Staff cannot modify their own access membership. All approved staff have the same operational access in this initial version.
+All dates use India time; weeks start Monday. Monthly sales use the order date and exclude cancelled orders. The monthly summary shows both payments allocated to that month's orders (including payments received in another month) and actual cash collected during the selected month. Outstanding comes from non-voided payment records, never a manually entered balance.
 
-## Database
+Costs include purchases and expenses by their entry dates, salary less deductions by the month the pay period starts, and alteration cost by received date. Unpaid purchases count as incurred cost. Payroll payments and advances are not added as another expense. Monthly profit is estimated sales minus these recorded costs, before tax, inventory valuation, and overhead allocations. Order gross profit includes linked direct purchases, expenses, and alteration costs, excluding unallocated salaries and overheads.
 
-The initial schema is recorded in `supabase/migrations/001_operations.sql`. Apply it once to the approved project. Do not rerun against an initialized database. No sample business records are seeded.
+Payment amounts must be positive and cannot exceed the remaining balance. A mistaken payment can be voided from its history; the entry remains recorded. New-record forms use stable UUIDs to avoid duplicates on retries. Salary and order values cannot be reduced below payments already made.
+
+All data is fetched in pages rather than silently capped at 1,000 records. Saved records refresh all totals immediately. Refresh or returning to the tab retrieves changes by other staff. A browser session lasts for the current tab and refreshes its access token as needed.
+
+## Access and database
+
+Only confirmed Supabase users added to `public.lm_staff` can access operations. Staff cannot change their own membership. All approved staff share operational access in this version. Row-level security protects every operational table; anonymous access is blocked. The order-creation RPC runs as the caller under the same policies. Payment triggers lock the source order or salary period to prevent concurrent overpayments.
+
+Apply `supabase/migrations/001_operations.sql` then `002_studio_operations.sql` once on a fresh approved database. The original production table is retained for compatibility; production is now stored on orders. No real or synthetic business records are seeded into production.
+
+## Development and verification
+
+Node 22+; no package installation is needed.
+
+- `npm start`: local server at http://127.0.0.1:3000
+- `npm run check`: syntax checks
+- `npm test`: financial calculations, dates, and delivery sorting
+- `node tests/preview.mjs`: local UI test at http://127.0.0.1:3001 using synthetic data only; it never connects to Supabase
+- `tests/access.sql`: rolled-back database checks for staff workflows, overpayment guards, atomic order creation, and nonstaff denial
+
+The local preview accepts a synthetic email/password and serves fake Auth/API routes for UI testing. Never deploy that test server. Only `public/` is hosted.
 
 ## Deployment
 
-Install Nginx and Certbot on the VPS. Copy the contents of `public/` to `/var/www/labelmuskan/`. Install `deploy/nginx.conf` in `/etc/nginx/sites-available/labelmuskan`, enable it via a symlink in `sites-enabled`, run `nginx -t`, and reload Nginx. Once DNS resolves, run Certbot with the Nginx plugin for the apex domain and, if configured, `www`.
+Nginx serves static files from `/var/www/labelmuskan/`. Copy all files in `public/` together to a staging directory, then promote them together. `deploy/nginx.conf` provides the initial HTTP configuration; the VPS configuration includes Certbot-managed TLS. Do not overwrite its certificate settings when deploying frontend updates. HTTPS renewal runs through `certbot.timer`; the renewal dry run passed during initial setup.
 
-## Initial scope
-
-Add and edit records in all five sections. Overview shows open orders, outstanding payments, production jobs, monthly expenses, and low-stock alerts. Order and production references are entered manually; inventory quantities are updated manually. Financial totals use INR. Data loads the latest 1,000 records per section; use Refresh to retrieve changes made by other staff. The browser session is stored only for the current tab. No deletion, automated stock deduction, imports, attachments, or multi-role permissions in this initial version.
+The full user brief is saved in `requirements/studio-dashboard.txt`.
