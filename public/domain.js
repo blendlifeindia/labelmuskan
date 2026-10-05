@@ -1,6 +1,6 @@
-export const stages=['New Order','Measurement Pending','Fabric Pending','Cutting','Stitching','Embroidery/Handwork','Trial Pending','Alteration','Ready','Delivered','Cancelled'];
-export const expenseCategories=['Fabric','Tailoring','Embroidery','Dyer','Packaging','Courier','Staff','Rent','Electricity','Marketing/PR','Travel','Food/Hospitality','Repairs','Miscellaneous'];
-export const purchaseCategories=['Fabric','Lining','Trims','Lace','Buttons','Zips','Embroidery material','Packaging','Accessories','Other'];
+export const stages=['New Order','Fabric','Cutting','Stitching','Embroidery / Handwork','Fitting','Alteration','Ready','Delivered','Cancelled'];
+export const expenseCategories=['Salary','Karigar','Fabric','Packaging','Studio','Marketing/PR','Courier','Other'];
+export const purchaseCategories=['Fabric','Lining','Buttons','Zips','Hooks','Interfacing','Packaging','Labels','Tags','Embroidery materials','Other'];
 export const modes=['UPI','Cash','Bank transfer','Card','Other'];
 export const n=x=>Number(x)||0;
 export const round=v=>Math.round((v+Number.EPSILON)*100)/100;
@@ -11,7 +11,7 @@ export function weekRange(day){const d=new Date(day+'T12:00:00Z');const start=ad
 export function inRange(day,start,end){return !!day&&day>=start&&day<=end;}
 export function monthRange(month){const [y,m]=month.split('-').map(Number);return [month+'-01',new Date(Date.UTC(y,m,0)).toISOString().slice(0,10)];}
 export const activeOrder=o=>!['Delivered','Cancelled'].includes(o.status);
-export const sortOrders=rows=>[...rows].sort((a,b)=>(a.due_date||'9999').localeCompare(b.due_date||'9999')||a.reference.localeCompare(b.reference));
+export const sortOrders=rows=>[...rows].sort((a,b)=>(a.next_delivery||a.due_date||'9999').localeCompare(b.next_delivery||b.due_date||'9999')||a.reference.localeCompare(b.reference));
 export const paymentsFor=(data,id)=>data.order_payments.filter(p=>p.order_id===id&&!p.voided);
 export const received=(data,id)=>sum(paymentsFor(data,id));
 export const balance=(data,o)=>Math.max(0,round(n(o.amount)-received(data,o.id)));
@@ -33,3 +33,7 @@ export function orderCost(data,o){
  const groups={fabric:sum(purchases.filter(p=>['Fabric','Lining'].includes(p.category)))+sum(expenses.filter(e=>e.category==='Fabric')),tailoring:sum(expenses.filter(e=>e.category==='Tailoring')),embroidery:sum(purchases.filter(p=>p.category==='Embroidery material'))+sum(expenses.filter(e=>e.category==='Embroidery')),packaging:sum(purchases.filter(p=>p.category==='Packaging'))+sum(expenses.filter(e=>['Packaging','Courier'].includes(e.category))),other:sum(purchases.filter(p=>!['Fabric','Lining','Embroidery material','Packaging'].includes(p.category)))+sum(expenses.filter(e=>!['Fabric','Tailoring','Embroidery','Packaging','Courier'].includes(e.category)))+sum(alterations,'additional_cost')};
  const total=round(Object.values(groups).reduce((a,b)=>a+b,0));return {groups,total,profit:round(n(o.amount)-total)};
 }
+
+export const productTotal=items=>round(items.reduce((total,item)=>total+n(item.quantity)*n(item.price),0));
+export const overallStage=items=>items.filter(i=>i.status!=='Cancelled').map(i=>i.status).sort((a,b)=>stages.indexOf(a)-stages.indexOf(b))[0]||'Cancelled';
+export const rolePermissions={production:['orders','studio','production','tasks','calendar'],team:['tasks'],accounts:['payments','expenses','purchases']};

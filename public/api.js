@@ -17,5 +17,6 @@ export async function request(path,options={},auth=true){
 }
 export async function signIn(email,password){setSession(await request('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})},false));}
 export async function signOut(){try{await request('/auth/v1/logout',{method:'POST'});}catch{}setSession(null);}
-export async function allRows(table){let rows=[],offset=0;for(;;){const page=await request(`/rest/v1/lm_${table}?select=*&order=created_at.desc,id.asc&limit=500&offset=${offset}`);rows.push(...page);if(page.length<500)return rows;offset+=500;}}
-export const save=(table,body,id)=>request('/rest/v1/lm_'+table+(id?'?id=eq.'+encodeURIComponent(id):''),{method:id?'PATCH':'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(body)});
+export const rpc=(name,body={})=>request('/rest/v1/rpc/lm_'+name,{method:'POST',body:JSON.stringify(body)});
+export const workspace=()=>rpc('workspace');
+export const save=async(table,body,id)=>[await rpc('save_record',{p_table:table,p_body:body,p_id:id||null})];

@@ -1,0 +1,378 @@
+I want to refine the Label Muskan Studio dashboard and keep it very clean, minimal and extremely easy to use.
+
+This is for a fashion/design studio, so please don’t make it feel like complicated accounting or ERP software. The main purpose is to quickly understand orders, production, clients, payments and studio work.
+
+IMPORTANT:
+Only I (Muskan / Owner) should have access to the HOME dashboard.
+Staff/team members should NOT be able to access the Home dashboard or the business-level financial overview unless I specifically give them access.
+Please keep permissions role-based.
+
+MAIN NAVIGATION:
+
+1. HOME
+2. ORDERS
+3. CLIENTS
+4. STUDIO
+5. MONEY
+6. MORE / SETTINGS
+
+--------------------------------
+1. HOME — OWNER ONLY
+--------------------------------
+
+Home should give me a quick overview of the entire studio.
+
+At the very top:
+
+TODAY'S TO-DO
+- Client fittings
+- Orders that need attention
+- Fabric/material to be picked up
+- Garments to send to karigar
+- Courier
+- Any important studio task
+
+I should be able to add tasks quickly and mark them complete.
+
+Then:
+
+ORDERS
+- Due Today
+- Due in Next 3 Days
+- Overdue
+- Active Orders
+
+Then:
+
+THIS MONTH
+- Sales
+- Collected
+- Client Outstanding
+- Business Costs
+
+Then:
+
+PRODUCTION
+- With tailor
+- With embroidery/handwork
+- With dyer
+- Fitting pending
+- Alterations pending
+
+Then:
+
+UPCOMING
+Show upcoming deliveries and fittings.
+
+Keep this page very clean. No unnecessary graphs or excessive information.
+
+--------------------------------
+2. ORDERS
+--------------------------------
+
+This is one of the most important sections.
+
+When creating a NEW ORDER, I need to be able to add MULTIPLE OUTFITS / PRODUCTS under the SAME ORDER.
+
+For example:
+
+ORDER #104
+Client: Riya
+
+Products:
+1. Boning top – ₹18,500
+2. Drape skirt – ₹12,000
+3. Organza cape – ₹8,500
+
+Total Order Value: ₹39,000
+
+Each product/outfit should have its own:
+- Product name
+- Description/design notes
+- Quantity
+- Price
+- Fabric
+- Delivery date if different
+- Production status
+- Notes
+
+But everything should remain under ONE client order.
+
+The order should also show:
+- Order number
+- Client
+- Order date
+- Total amount
+- Advance paid
+- Balance
+- Delivery date
+- Fitting date
+- Overall order status
+
+PRODUCTION STATUS:
+
+New Order
+→ Fabric
+→ Cutting
+→ Stitching
+→ Embroidery / Handwork
+→ Fitting
+→ Alteration
+→ Ready
+→ Delivered
+
+I should be able to see the current stage quickly without opening the entire order.
+
+--------------------------------
+3. CLIENTS
+--------------------------------
+
+Create a separate CLIENTS section.
+
+I want a very easy way to add a new client.
+
+There should be a clear:
+
++ NEW CLIENT
+
+button inside the Clients section.
+
+Also, while creating a New Order, if the client doesn't exist, I should be able to click:
+
++ New Client
+
+and create the client through a small pop-up without leaving the order.
+
+Client profile should contain:
+
+- Name
+- Phone
+- Email if required
+- Instagram
+- Measurements
+- Measurement date
+- Notes
+- Past orders
+- Current orders
+- Total spent
+- Outstanding amount
+- Alteration notes
+- Design/fitting preferences
+
+Measurements should be saved to the client's profile so they can be reused for future orders.
+
+--------------------------------
+4. STUDIO
+--------------------------------
+
+This needs to be separate from client orders.
+
+Not everything the karigars work on is a client order.
+
+Studio should include:
+
+- New Collection
+- Samples
+- Store Pieces
+- Shoot Pieces
+- Lookbook Pieces
+- New Designs
+- Alterations for Store Pieces
+
+Example:
+
+THE SCULPT EDIT
+
+Piece | Status
+Black Sculpt Top | Stitching
+Cream Drape Skirt | Embroidery
+Pink Co-ord | Fitting
+Store Display Set | Ready
+
+These should NOT automatically become client orders.
+
+--------------------------------
+5. KARIGAR / PRODUCTION
+--------------------------------
+
+Keep a simple production tracking system.
+
+Show:
+
+Karigar
+Work
+Order / Studio Piece
+Date Given
+Due Date
+Status
+Payment
+
+Example:
+
+Ramesh
+Blouse stitching
+Order #104
+Given: 10 Oct
+Due: 13 Oct
+Status: In Progress
+
+Also show a quick summary:
+
+With Tailor – 4
+With Embroidery – 2
+With Dyer – 1
+Fitting Pending – 3
+
+This should help me immediately know where every garment currently is.
+
+--------------------------------
+6. MONEY
+--------------------------------
+
+Keep this simple.
+
+PAYMENTS & OUTSTANDING:
+
+Client
+Order
+Total
+Paid
+Balance
+Due Date
+Status
+
+Filters:
+- Due Today
+- This Week
+- Overdue
+
+EXPENSES:
+
+Categories:
+- Salary
+- Karigar
+- Fabric
+- Packaging
+- Studio
+- Marketing / PR
+- Courier
+- Other
+
+Do NOT add bank transaction syncing.
+I sometimes use my bank account personally as well, so I don't want bank transactions mixed into this dashboard.
+
+The dashboard should only contain business entries that we manually record.
+
+--------------------------------
+7. PURCHASES / MATERIALS
+--------------------------------
+
+Keep this simple, not a complicated inventory system.
+
+Track:
+
+- Fabric
+- Lining
+- Buttons
+- Zips
+- Hooks
+- Interfacing
+- Packaging
+- Labels
+- Tags
+- Embroidery materials
+- Other studio purchases
+
+I should be able to see what was purchased, amount spent and, where relevant, which order/collection it was for.
+
+--------------------------------
+8. CALENDAR
+--------------------------------
+
+Add a simple Studio Calendar.
+
+It should show:
+- Client fittings
+- Delivery dates
+- Shoot dates
+- Fabric pickup
+- Karigar deadlines
+- Important studio tasks
+
+No complicated calendar system needed.
+
+--------------------------------
+9. QUICK ADD
+--------------------------------
+
+Instead of only "+ New Order", I would like a simple + ADD button.
+
+Options:
+
++ New Order
++ New Client
++ Task
++ Expense
++ Purchase
++ Studio Piece
++ Payment
+
+This should make daily use very quick.
+
+--------------------------------
+10. PERMISSIONS
+--------------------------------
+
+This is VERY IMPORTANT.
+
+I am the OWNER / ADMIN.
+
+ONLY I should have access to the HOME dashboard and business-level overview such as:
+
+- Sales
+- Revenue
+- Collected
+- Outstanding
+- Expenses
+- Business Costs
+- Profit/Loss if added later
+
+Staff should have access only to the sections/functions they need for their work.
+
+For example:
+- Production staff → Orders / Production
+- Team → Tasks relevant to them
+- Accounts → Payments / Expenses if required
+- Owner → Everything
+
+Please make this role-based so I can control access.
+
+--------------------------------
+OVERALL DESIGN
+--------------------------------
+
+Keep the existing visual direction.
+
+I want:
+- Very clean
+- Minimal
+- Luxury
+- Soft beige / nude / muted mauve palette
+- Easy to read
+- Lots of white space
+- Not too many cards
+- Not too many numbers
+- No unnecessary graphs
+- No complicated accounting terminology
+
+The dashboard should feel like a luxury fashion studio management tool, not an accounting software.
+
+The main question the dashboard should answer every day is:
+
+"What needs my attention today?"
+
+And for every order:
+
+"Where is this garment right now, when is it due, how much has the client paid, and what is still pending?"
+
+Please prioritize simplicity and speed of use over adding too many features.

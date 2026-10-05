@@ -1,57 +1,51 @@
-# Label Muskan studio operations
+# Label Muskan Studio
 
-Private daily operations dashboard at https://labelmuskan.online. Built around orders and delivery urgency, with simple forms and automatic balances and summaries. No graphs or separate production entry are needed.
+Private operations dashboard at https://labelmuskan.online. Soft beige, nude and mauve interface with six sections: Home, Orders, Clients, Studio, Money, More / Settings. No graphs or bank syncing.
 
 ## Approved infrastructure
 
-- GitHub: https://github.com/blendlifeindia/labelmuskan
-- Supabase: https://supabase.com/dashboard/project/xybqwszhkbiucgextwog
-- RackNerd Ubuntu VPS: 107.173.55.162
-- Domain: labelmuskan.online (Spaceship DNS)
+GitHub `blendlifeindia/labelmuskan`, Supabase `xybqwszhkbiucgextwog`, RackNerd VPS `107.173.55.162`, domain `labelmuskan.online`. See AGENTS.md. Private SSH credentials remain in ignored `.deployment/`. The browser contains only a public Supabase publishable key.
 
-See AGENTS.md for connection restrictions. Private SSH credentials stay in ignored `.deployment/`; never commit them. `public/config.js` contains only a public publishable key. No service-role keys are used in the browser.
+## Daily use
 
-## Daily workflow
+- Home: quick tasks, delivery urgency, four business figures, production counts, upcoming deliveries and fittings.
+- Orders: multiple garments in one client order, each with its own description, quantity, unit price, fabric, delivery override, production stage and notes. Total is the sum of quantity × price. Overall stage is the earliest unfinished stage across non-cancelled products. Owner can cancel the whole order explicitly.
+- Clients: contacts, measurements/date, alteration notes, fitting preferences and current/past orders. Add a new client inside an order using a separate popup; the draft stays intact. A saved client remains if the order draft is cancelled.
+- Studio: collection pieces separate from client orders; samples, store, shoots, lookbooks, new designs and store alterations. Karigar jobs link to exactly one client garment or studio piece. Jobs do not automatically change the garment stage or create an expense; record these when they occur.
+- Money: individual client payments and balances, due-date filters, expenses, purchases, optional salary periods. Purchases can link to an order, collection or studio piece. Enter each cost once. No bank integration.
+- Calendar: simple weekly agenda from deliveries, fitting dates, studio due/shoot dates, karigar deadlines, tasks and manual events.
+- More: assigned tasks, calendar, owner-managed team access and optional manual stock register.
+- + ADD: permitted daily actions in one menu.
 
-1. **New order:** choose an existing client or add a client inside the same form. Enter order and delivery dates, outfit, selling price, production stage, assigned staff, and any advance received. The client, order, and advance are saved in one database transaction.
-2. **Orders:** automatically sorted by earliest delivery date. Use Pending, Today, Next 3 days, Overdue, or All. Open an order to update production, record another payment, or inspect direct costs and gross profit.
-3. **Expenses:** daily studio expenses with category, paid-by, payment mode, and optional order link. Enter materials in Purchases and payroll in Salaries, rather than repeating the same cost here.
-4. **Purchases:** record materials with vendor, category, quantity, amount, payment status, and optional order link. Stock purchases can stay unallocated. The amount enters monthly costs once.
-5. **Salaries:** create one record per staff member and weekly/monthly pay period. Record salary payments and advances against that period. Salary less deduction is the obligation; both salary payments and advances reduce its balance.
-6. **Clients:** contact details, Instagram, measurements, preferences, notes, order history, total orders, and total spent. Previous client information is reused for new orders.
-7. **Alterations & returns:** choose the order; its client is reused. Track the issue, received date, assigned person, expected completion, status, and studio cost. The added cost enters order/monthly costs once, so do not repeat it in Expenses.
-8. **Inventory:** a basic manual stock register with colour, quantity, unit cost, vendor, and low-stock threshold. Automated material purchase/use movements can be added later.
+## Roles and access
 
-## Calculations
+Only confirmed Supabase logins with studio membership can use the workspace. Muskan is the protected owner. Staff role templates are:
 
-All dates use India time; weeks start Monday. Monthly sales use the order date and exclude cancelled orders. The monthly summary shows both payments allocated to that month's orders (including payments received in another month) and actual cash collected during the selected month. Outstanding comes from non-voided payment records, never a manually entered balance.
+| Role | Default access |
+| --- | --- |
+| Owner | Everything, including Home and business totals |
+| Production | Orders, studio pieces, karigar jobs, tasks, calendar; no prices |
+| Team | Tasks they created or that are assigned to them |
+| Accounts | Individual payments, expenses, purchases; no Home or aggregate cards |
 
-Costs include purchases and expenses by their entry dates, salary less deductions by the month the pay period starts, and alteration cost by received date. Unpaid purchases count as incurred cost. Payroll payments and advances are not added as another expense. Monthly profit is estimated sales minus these recorded costs, before tax, inventory valuation, and overhead allocations. Order gross profit includes linked direct purchases, expenses, and alteration costs, excluding unallocated salaries and overheads.
+Owner can override permitted sections in More / Settings → Team access. Home / business overview requires an explicit grant. Orders plus Payments permits creating orders and editing prices. Clients alone shows history without money. Salary access is separate. The app does not create passwords or send invitations: create a confirmed login in Supabase Authentication, then grant the email access here. Removing membership immediately revokes all API access; it retains the login and existing business entries.
 
-Payment amounts must be positive and cannot exceed the remaining balance. A mistaken payment can be voided from its history; the entry remains recorded. New-record forms use stable UUIDs to avoid duplicates on retries. Salary and order values cannot be reduced below payments already made.
+Base tables are revoked from browser roles. Public SECURITY INVOKER RPCs call private SECURITY DEFINER functions that check the authenticated user and explicit permissions, whitelist writes, redact money columns, scope tasks/events to their creator/assignee, and protect owner membership. RLS is enabled on every operational table. Authorization never trusts user-editable account metadata. Existing payment triggers lock their source order/salary to prevent concurrent overpayments. Anonymous users cannot execute these RPCs.
 
-All data is fetched in pages rather than silently capped at 1,000 records. Saved records refresh all totals immediately. Refresh or returning to the tab retrieves changes by other staff. A browser session lasts for the current tab and refreshes its access token as needed.
+## Numbers and dates
 
-## Access and database
+India time; weeks start Monday. Home sales use this month's order dates, excluding cancelled orders. Collected uses actual payment dates and ignores voids. Client outstanding includes all non-cancelled orders. Business costs include expenses/purchases by entry date, salary less deductions by period-start date, and non-cancelled alteration costs by received date. Unpaid purchases count as incurred costs. Payroll payments and advances reduce salary balance but are not counted as another cost. Enter salary costs in salary periods OR expenses, never both.
 
-Only confirmed Supabase users added to `public.lm_staff` can access operations. Staff cannot change their own membership. All approved staff share operational access in this version. Row-level security protects every operational table; anonymous access is blocked. The order-creation RPC runs as the caller under the same policies. Payment triggers lock the source order or salary period to prevent concurrent overpayments.
+Advances and subsequent receipts form one payment history. Payment amounts must be positive and cannot exceed the outstanding balance. Incorrect payments can be voided, preserving history. Orders/salary values cannot be lowered below already received/paid amounts. Product removal is blocked when a karigar job references it; retain the product or change its job link first.
 
-Apply `supabase/migrations/001_operations.sql` then `002_studio_operations.sql` once on a fresh approved database. The original production table is retained for compatibility; production is now stored on orders. No real or synthetic business records are seeded into production.
+Workspace RPCs return permitted rows as aggregated JSON without the REST 1,000-row cap. This is suitable for this small studio; introduce server pagination when the dataset grows. Refresh and returning to the tab fetch current permissions and records. Sessions remain in the current tab and refresh access tokens as needed.
 
-## Development and verification
+## Development / verification
 
-Node 22+; no package installation is needed.
+Node 22+, no dependencies: `npm start`, `npm run check`, `npm test`. `node tests/preview.mjs` serves synthetic UI data on port 3001 and never contacts Supabase. Log in with `owner@local.test`, `production@local.test`, `accounts@local.test`, or `team@local.test` and any synthetic password. `tests/access.sql` checks real role enforcement, price redaction, direct-table denial, multi-product totals, overpayment guards, explicit Home grants, assignment scope and access revocation in a rolled-back transaction.
 
-- `npm start`: local server at http://127.0.0.1:3000
-- `npm run check`: syntax checks
-- `npm test`: financial calculations, dates, and delivery sorting
-- `node tests/preview.mjs`: local UI test at http://127.0.0.1:3001 using synthetic data only; it never connects to Supabase
-- `tests/access.sql`: rolled-back database checks for staff workflows, overpayment guards, atomic order creation, and nonstaff denial
-
-The local preview accepts a synthetic email/password and serves fake Auth/API routes for UI testing. Never deploy that test server. Only `public/` is hosted.
+Migrations 001, 002, 003, then 004 apply once to the approved database. Migration 003 preserves existing orders, clients, receipts and expenses, migrating each old order into one product. Old production and alteration records remain retained. UI verification uses local synthetic data; none is seeded into production.
 
 ## Deployment
 
-Nginx serves the release selected by `/var/www/labelmuskan-current`, currently `/var/www/labelmuskan-releases/20261005-studio/`. Copy all files in `public/` together to a new release directory, then atomically update the current symlink. The original frontend remains in `/var/www/labelmuskan/` for recovery. `deploy/nginx.conf` provides the initial HTTP configuration; the live VPS configuration includes the release root and Certbot-managed TLS. Do not overwrite its certificate settings when deploying frontend updates. HTTPS renewal runs through `certbot.timer`; the renewal dry run passed during initial setup.
-
-The full user brief is saved in `requirements/studio-dashboard.txt`.
+Nginx serves `/var/www/labelmuskan-current`, a symlink to a versioned directory in `/var/www/labelmuskan-releases/`. Upload public files into a new release, check them, then switch the symlink atomically. Preserve the existing Nginx TLS configuration and Certbot renewal. Original releases remain available. Database migration 003 requires the corresponding RPC frontend; rolling back only the static UI to an earlier direct-table version will not work.
