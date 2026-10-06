@@ -13,7 +13,7 @@ GitHub `blendlifeindia/labelmuskan`, Supabase `xybqwszhkbiucgextwog`, RackNerd V
 - Orders: multiple garments in one client order, each with its own description, quantity, unit price, fabric, delivery override, production stage and notes. Total is the sum of quantity × price. Overall stage is the earliest unfinished stage across non-cancelled products. Owner can cancel the whole order explicitly.
 - Clients: contacts, measurements/date, alteration notes, fitting preferences and current/past orders. Add a new client inside an order using a separate popup; the draft stays intact. A saved client remains if the order draft is cancelled.
 - Studio: collection pieces separate from client orders; samples, store, shoots, lookbooks, new designs and store alterations. Karigar jobs link to exactly one client garment or studio piece. Jobs do not automatically change the garment stage or create an expense; record these when they occur.
-- Money: individual client payments and balances, due-date filters, expenses, purchases, optional salary periods. Purchases can link to an order, collection or studio piece. Enter each cost once. No bank integration.
+- Money: mobile month selector, cash summary, and vertical cards for payments, expenses, purchases and reusable salary profiles. Purchases can link to an order, collection or studio piece. Enter each cost once. No bank integration.
 - Calendar: simple weekly agenda from deliveries, fitting dates, studio due/shoot dates, karigar deadlines, tasks and manual events.
 - More: assigned tasks, calendar, owner-managed team access and optional manual stock register.
 - + ADD: permitted daily actions in one menu.
@@ -35,7 +35,11 @@ Base tables are revoked from browser roles. Public SECURITY INVOKER RPCs call pr
 
 ## Numbers and dates
 
-India time; weeks start Monday. Home sales use this month's order dates, excluding cancelled orders. Collected uses actual payment dates and ignores voids. Client outstanding includes all non-cancelled orders. Business costs include expenses/purchases by entry date, salary less deductions by period-start date, and non-cancelled alteration costs by received date. Unpaid purchases count as incurred costs. Payroll payments and advances reduce salary balance but are not counted as another cost. Enter salary costs in salary periods OR expenses, never both.
+India time; weeks start Monday. Money sales use the selected month's order dates, excluding cancelled orders. Collected uses actual client payment dates and ignores voids. Client outstanding is the balance of orders entered through the selected month end, after receipts through that date. Salary totals use actual recorded salary payment dates, including advances; direct Salary-category expenses are included once. Purchase totals use actual purchase payments, excluding unpaid balances. Other expenses use expense dates, excluding Salary entries. Total money out = salaries + purchases + other expenses; Net = collected − total money out. Enter each payment once.
+
+Salary profiles remember name, amount, frequency and payment day. Record Paid adds a dated payment without creating a new profile. Weekly status on the current month refers to the current week; historical cards show recorded payment count and total. Existing salary periods and payments are preserved, with payments copied into the new ledger once. Existing Paid purchases receive a payment on their purchase date; historical Part paid purchases require recording their actual payments because the old system did not store those amounts/dates.
+
+Individual orders offer Invoice → Print / Save PDF. The minimal couture template uses actual outfits, totals and non-void receipts. It defaults to Label Muskan and labelmuskan.online; it does not invent GST, taxes or contact details.
 
 Advances and subsequent receipts form one payment history. Payment amounts must be positive and cannot exceed the outstanding balance. Incorrect payments can be voided, preserving history. Orders/salary values cannot be lowered below already received/paid amounts. Product removal is blocked when a karigar job references it; retain the product or change its job link first.
 
