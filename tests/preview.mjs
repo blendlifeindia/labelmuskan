@@ -12,6 +12,11 @@ data.order_items=data.orders.map(o=>({id:randomUUID(),order_id:o.id,name:o.produ
 data.studio_pieces=[{id:randomUUID(),name:'Black Sculpt Top',collection:'THE SCULPT EDIT',kind:'Samples',status:'Stitching',quantity:1,due_date:addDays(day,3)}];data.jobs=[];data.tasks=[{id:randomUUID(),title:'Pick up organza fabric',category:'Fabric pickup',task_date:day,created_by:'owner',assigned_user_id:'owner',done:false}];data.events=[];
 data.salary_profiles=[{id:'salary-preview',staff_name:'Master Cutting',amount:12000,frequency:'Weekly',payment_day:'Saturday',active:true}];data.salary_payouts=[{id:randomUUID(),profile_id:'salary-preview',amount:12000,payment_date:day,payment_mode:'Cash',kind:'Salary'}];data.purchase_payments=data.purchases.map(p=>({id:randomUUID(),purchase_id:p.id,amount:p.amount,payment_date:p.purchase_date,payment_mode:'Other'}));
 data.orders.forEach((o,i)=>{o.invoice_number='LM-2026-'+String(i+1).padStart(6,'0');o.invoice_date=o.order_date;});
+if(process.env.EXPENSE_SHEET_QA){
+ data.purchases.push(...Array.from({length:240},(_,i)=>({id:randomUUID(),purchase_date:day,vendor:i%2?'Silk House':'Studio Supplies',item:['Organza','Cotton lining','Packaging','Embroidery thread'][i%4],category:i%2?'Fabric':'Packaging',quantity:i%5+1,amount:500+i*10,status:'Unpaid'})));
+ data.expenses.push({id:randomUUID(),expense_date:day,description:'Courier',category:'Courier',amount:850,paid_by:'Muskan',payment_mode:'UPI',status:'Paid'},{id:randomUUID(),expense_date:day,description:'Electricity',category:'Studio',amount:3200,paid_by:'Muskan',payment_mode:'Other',status:'Pending'});
+ data.salary_profiles[0].job_role='Master cutter';
+}
 let role='owner';
 const send=(res,status,body)=>{res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(body));};
 http.createServer(async(req,res)=>{
@@ -21,6 +26,7 @@ http.createServer(async(req,res)=>{
   if(path.startsWith('/auth/')){let raw='';for await(const c of req)raw+=c;if(u.searchParams.get('grant_type')==='password')role=JSON.parse(raw).email.split('@')[0];send(res,200,{access_token:role,refresh_token:role,expires_at:Math.floor(Date.now()/1000)+3600,user:{id:role,email:role+'@local.test'}});return;}
   if(path.startsWith('/rest/')){
    let body={};if(req.method!=='GET'){let raw='';for await(const c of req)raw+=c;body=raw?JSON.parse(raw):{};}
+   if(path==='/rest/v1/rpc/lm_set_expense_void'){const row=data[body.p_table].find(r=>r.id===body.p_id);row.voided=body.p_voided;send(res,200,{saved:true,id:row.id});return;}
    if(path==='/rest/v1/rpc/lm_invoice'){const order=data.orders.find(o=>o.id===body.p_order_id);send(res,200,{order,client:data.customers.find(c=>c.id===order.customer_id),items:data.order_items.filter(i=>i.order_id===order.id),payments:data.order_payments.filter(p=>p.order_id===order.id&&!p.voided)});return;}
    if(path==='/rest/v1/rpc/lm_month_money'){send(res,200,cashMonth(data,body.p_month));return;}
    if(path==='/rest/v1/rpc/lm_workspace'){
