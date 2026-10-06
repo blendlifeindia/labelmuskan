@@ -1,0 +1,41 @@
+-- Approved project only. All synthetic records and modifications roll back.
+begin;
+insert into auth.users(id,email,email_confirmed_at) values('30000000-0000-4000-8000-000000000001','delivery-accounts@example.invalid',now());
+insert into public.lm_staff(user_id,role,permissions) values('30000000-0000-4000-8000-000000000001','accounts',array['payments','expenses','purchases']);
+set local role authenticated;
+select set_config('request.jwt.claim.sub','620ff01b-a3bb-4c91-9242-43a8ce4a49e4',true);
+do $$ declare oid uuid;c uuid;w jsonb;beforepaid numeric;begin
+ c=(public.lm_save_record('customers','{"name":"Delivery rollback client"}',null)->>'id')::uuid;
+ oid=(public.lm_save_order(jsonb_build_object('reference','ROLLBACK-DELIVERY','customer_id',c,'order_date','2026-10-06','due_date','2026-10-15','advance_date','2026-10-06','payment_mode','UPI'),'[{"name":"Top","quantity":1,"price":2000,"status":"Ready"},{"name":"Skirt","quantity":1,"price":3000,"status":"Stitching"}]',null,1000)->>'id')::uuid;
+ perform set_config('test.delivery_id',oid::text,true);
+ perform public.lm_set_order_delivery(oid,true);
+ perform public.lm_set_order_delivery(oid,true);
+ w=public.lm_workspace();
+ if not exists(select 1 from jsonb_array_elements(w->'orders') o where o->>'id'=oid::text and o->>'status'='Delivered' and (o->>'amount')::numeric=5000) then raise exception 'Delivery failed';end if;
+ if exists(select 1 from jsonb_array_elements(w->'order_items') i where i->>'order_id'=oid::text and i->>'status'<>'Delivered') then raise exception 'Products not delivered';end if;
+ select coalesce(sum((p->>'amount')::numeric),0) into beforepaid from jsonb_array_elements(w->'order_payments') p where p->>'order_id'=oid::text and not (p->>'voided')::boolean;
+ if beforepaid<>1000 then raise exception 'Delivery changed payments';end if;
+ perform public.lm_set_order_delivery(oid,false);
+ w=public.lm_workspace();
+ if not exists(select 1 from jsonb_array_elements(w->'orders') o where o->>'id'=oid::text and o->>'status'='Stitching') then raise exception 'Order stage not restored';end if;
+ if not exists(select 1 from jsonb_array_elements(w->'order_items') i where i->>'order_id'=oid::text and i->>'name'='Top' and i->>'status'='Ready') or not exists(select 1 from jsonb_array_elements(w->'order_items') i where i->>'order_id'=oid::text and i->>'name'='Skirt' and i->>'status'='Stitching') then raise exception 'Individual stages not restored';end if;
+ perform public.lm_save_record('expenses','{"expense_date":"2026-10-06","description":"Dye rollback","category":"Dye","amount":10,"paid_by":"Owner","payment_mode":"Cash"}',null);
+ perform public.lm_save_record('expenses','{"expense_date":"2026-10-06","description":"Misc rollback","category":"Miscellaneous","amount":10,"paid_by":"Owner","payment_mode":"Cash"}',null);
+end $$;
+reset role;
+update public.lm_orders set status='Delivered',delivery_previous_stages=null where id=current_setting('test.delivery_id')::uuid;
+update public.lm_order_items set status='Delivered' where order_id=current_setting('test.delivery_id')::uuid;
+set local role authenticated;
+select public.lm_set_order_delivery(current_setting('test.delivery_id')::uuid,false);
+do $$ declare w jsonb;begin w=public.lm_workspace();if not exists(select 1 from jsonb_array_elements(w->'orders') o where o->>'id'=current_setting('test.delivery_id') and o->>'status'='Ready') then raise exception 'Legacy delivered fallback failed';end if;end $$;
+reset role;
+update public.lm_orders set status='Cancelled' where id=current_setting('test.delivery_id')::uuid;
+set local role authenticated;
+do $$ begin begin perform public.lm_set_order_delivery(current_setting('test.delivery_id')::uuid,true);raise exception 'Cancelled order accepted';exception when raise_exception then if sqlerrm<>'Cancelled orders cannot be delivered' then raise;end if;end;end $$;
+select set_config('request.jwt.claim.sub','30000000-0000-4000-8000-000000000001',true);
+do $$ begin
+ begin perform public.lm_set_order_delivery(current_setting('test.delivery_id')::uuid,true);raise exception 'Accounts can change delivery';exception when insufficient_privilege then null;end;
+ if has_function_privilege('anon','public.lm_set_order_delivery(uuid,boolean)','execute') then raise exception 'Anonymous execution permitted';end if;
+end $$;
+select 'Delivery, reversal, unchanged receipts, categories and permissions passed' result;
+rollback;

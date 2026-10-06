@@ -60,3 +60,6 @@ More → Planned modules offers 38 optional ideas across seven studio categories
 
 
 Phone screens use a reference-inspired peach/lilac background, rounded white cards, charcoal pill actions and bold sans-serif headings. The compact six-item navigation stays in a single row. The Home order-count section uses a dark card; operational data and workflows are unchanged.
+
+
+Orders use compact cards showing client/reference, outfit/stage, due date, balance, payment status and order total. Multi-outfit orders expand vertically. Delivered requires confirmation, keeps payments unchanged, and stores prior garment stages for Undo delivery; older delivered records without a snapshot reopen at Ready. The Delivered filter complements Active and All. Clients use clickable names with phone numbers on the right. The in-order New Client dialog keeps Cancel/Save visible while fields scroll and preserves the order draft. Expense categories include Dye and Miscellaneous; legacy Other expense entries are renamed without changing amounts.
