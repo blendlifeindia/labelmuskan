@@ -8,7 +8,7 @@ GitHub `blendlifeindia/labelmuskan`, Supabase `xybqwszhkbiucgextwog`, RackNerd V
 
 ## Daily use
 
-- Home: quick tasks, delivery urgency, four business figures, production counts, upcoming deliveries and fittings.
+- Home: phone-first daily checklist, upcoming delivery/fitting cards (four initially, with View all), compact order counts and three monthly figures: sales, collected, client outstanding. No Home tables, production block or business costs. Tasks can link to a client, order and optional date (blank means today). Other task dates remain in Tasks / Calendar.
 - New order: Client → manual order number and blank order date → delivery / fitting → garments → automatic total → advance / balance → Create Order. No payment date/mode, assignments, order notes or per-product delivery overrides are requested at creation. The initial advance uses the entered order date and “Other” payment mode; later receipts use + Add Payment. Extra fields remain in Edit order.
 - Orders: multiple garments in one client order, each with its own description, quantity, unit price, fabric, delivery override, production stage and notes. Total is the sum of quantity × price. Overall stage is the earliest unfinished stage across non-cancelled products. Owner can cancel the whole order explicitly.
 - Clients: contacts, measurements/date, alteration notes, fitting preferences and current/past orders. Add a new client inside an order using a separate popup; the draft stays intact. A saved client remains if the order draft is cancelled.
@@ -45,7 +45,7 @@ Workspace RPCs return permitted rows as aggregated JSON without the REST 1,000-r
 
 Node 22+, no dependencies: `npm start`, `npm run check`, `npm test`. `node tests/preview.mjs` serves synthetic UI data on port 3001 and never contacts Supabase. Log in with `owner@local.test`, `production@local.test`, `accounts@local.test`, or `team@local.test` and any synthetic password. `tests/access.sql` checks real role enforcement, price redaction, direct-table denial, multi-product totals, overpayment guards, explicit Home grants, assignment scope and access revocation in a rolled-back transaction.
 
-Migrations 001, 002, 003, then 004 apply once to the approved database. Migration 003 preserves existing orders, clients, receipts and expenses, migrating each old order into one product. Old production and alteration records remain retained. UI verification uses local synthetic data; none is seeded into production.
+Migrations 001, 002, 003, 004, then the timestamped mobile_home_task_clients migration apply once to the approved database. Migration 003 preserves existing orders, clients, receipts and expenses, migrating each old order into one product. Old production and alteration records remain retained. UI verification uses local synthetic data; none is seeded into production.
 
 ## Deployment
 

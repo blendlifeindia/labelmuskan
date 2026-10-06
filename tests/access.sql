@@ -10,7 +10,7 @@ insert into public.lm_staff(user_id,role,permissions,display_name) values
  ('10000000-0000-4000-8000-000000000003','team',array['tasks'],'Test team');
 set local role authenticated;
 select set_config('request.jwt.claim.sub','620ff01b-a3bb-4c91-9242-43a8ce4a49e4',true);
-do $$ declare c uuid;oid uuid;result jsonb;items jsonb;begin
+do $$ declare c uuid;oid uuid;result jsonb;items jsonb;taskid uuid;otherclient uuid;begin
  result=public.lm_workspace();if not result?'home' or result#>>'{profile,role}'<>'owner' then raise exception 'Owner overview missing';end if;
  c=(public.lm_save_record('customers','{"name":"Rollback client"}',null)->>'id')::uuid;
  items='[{"name":"Boning top","quantity":1,"price":18500,"status":"Ready"},{"name":"Drape skirt","quantity":1,"price":12000,"status":"Stitching"},{"name":"Organza cape","quantity":1,"price":8500,"status":"Embroidery / Handwork"}]';
@@ -23,6 +23,12 @@ do $$ declare c uuid;oid uuid;result jsonb;items jsonb;begin
  -- A studio piece never creates a client order.
  perform public.lm_save_record('studio_pieces','{"name":"Rollback sample","collection":"SCULPT EDIT","status":"Stitching"}',null);
  if jsonb_array_length(public.lm_workspace()->'orders')<>jsonb_array_length(result->'orders') then raise exception 'Studio piece became an order';end if;
+ taskid=(public.lm_save_record('tasks',jsonb_build_object('title','Linked client task','task_date','2026-10-06','order_id',oid),null)->>'id')::uuid;
+ if not exists(select 1 from jsonb_array_elements(public.lm_workspace()->'tasks') t where t->>'id'=taskid::text and t->>'customer_id'=c::text) then raise exception 'Task client/order link missing';end if;
+ perform public.lm_save_record('tasks','{"done":true}',taskid);
+ if not exists(select 1 from jsonb_array_elements(public.lm_workspace()->'tasks') t where t->>'id'=taskid::text and (t->>'done')::boolean) then raise exception 'Checklist completion failed';end if;
+ otherclient=(public.lm_save_record('customers','{"name":"Other rollback client"}',null)->>'id')::uuid;
+ begin perform public.lm_save_record('tasks',jsonb_build_object('title','Bad link','order_id',oid,'customer_id',otherclient),null);raise exception 'Wrong order client allowed';exception when raise_exception then if sqlerrm<>'Choose the client attached to this order' then raise;end if;end;
  -- Owner can grant overview deliberately to an existing login.
  perform public.lm_manage_member('accounts-test@example.invalid','accounts',array['payments','expenses','purchases'],'Test accounts');
 end $$;
