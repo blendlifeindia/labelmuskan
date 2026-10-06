@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {invoiceValues,invoiceHTML} from '../public/invoice.js';
+const snapshot={order:{invoice_number:'LM-2026-000042',invoice_date:'2026-10-06',due_date:'2026-10-15',amount:1},client:{name:'A <client>',phone:'9000000000',address:'Line one\nLine two'},items:[{name:'Top',quantity:2,price:1250.25},{name:'Skirt',quantity:1,price:3000}],payments:[{amount:1000},{amount:500},{amount:300,voided:true}]};
+test('invoice uses every product and all non-void receipts, including partial payments',()=>{assert.deepEqual(invoiceValues(snapshot),{total:5500.5,paid:1500,balance:4000.5});assert.equal(invoiceValues({...snapshot,payments:[{amount:6000}]}).balance,0);});
+test('invoice preserves stored identity and safely fills the approved five-column template',()=>{const html=invoiceHTML(snapshot);assert.match(html,/LM-2026-000042/);assert.match(html,/A &lt;client&gt;/);assert.equal((html.match(/<th>/g)||[]).length,5);assert.match(html,/Top/);assert.match(html,/Skirt/);assert.match(html,/Thank You/);assert.doesNotMatch(html,/Shipping|Made for you/);assert.match(invoiceHTML({...snapshot,client:{...snapshot.client,name:'Updated client'}}),/Updated client/);});

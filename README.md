@@ -1,6 +1,6 @@
 # Label Muskan Studio
 
-Private operations dashboard at https://labelmuskan.online. Warm blush/ivory interface with plum actions and pastel lavender, sage, peach and dusty pink states. Six sections: Home, Orders, Money, More, Clients, Studio. Phone navigation shows all six in one row with 44px-high targets; mobile record tables become labelled vertical cards. No graphs or bank syncing.
+Private operations dashboard at https://labelmuskan.online. Warm blush/ivory interface with plum actions and pastel lavender, sage, peach and dusty pink states. Seven sections: Home, Orders, Expenses, Money, Clients, Studio, More. Phone navigation shows all seven in one row with 44px-high targets; mobile record tables become labelled vertical cards. No graphs or bank syncing.
 
 ## Approved infrastructure
 
@@ -13,7 +13,7 @@ GitHub `blendlifeindia/labelmuskan`, Supabase `xybqwszhkbiucgextwog`, RackNerd V
 - Orders: multiple garments in one client order, each with its own description, quantity, unit price, fabric, delivery override, production stage and notes. Total is the sum of quantity × price. Overall stage is the earliest unfinished stage across non-cancelled products. Owner can cancel the whole order explicitly.
 - Clients: contacts, measurements/date, alteration notes, fitting preferences and current/past orders. Add a new client inside an order using a separate popup; the draft stays intact. A saved client remains if the order draft is cancelled.
 - Studio: collection pieces separate from client orders; samples, store, shoots, lookbooks, new designs and store alterations. Karigar jobs link to exactly one client garment or studio piece. Jobs do not automatically change the garment stage or create an expense; record these when they occur.
-- Money: mobile month selector, cash summary, and vertical cards for payments, expenses, purchases and reusable salary profiles. Purchases can link to an order, collection or studio piece. Enter each cost once. No bank integration.
+- Money: mobile month selector, client payment cards, full receipt history and Net Cash Flow. Expenses: separate Purchases, Salaries and Other Expenses with actual-payment monthly totals. Purchases can link to an order, collection or studio piece. Enter each cost once. No bank integration.
 - Calendar: simple weekly agenda from deliveries, fitting dates, studio due/shoot dates, karigar deadlines, tasks and manual events.
 - More: assigned tasks, calendar, owner-managed team access and optional manual stock register.
 - + ADD: permitted daily actions in one menu.
@@ -35,7 +35,7 @@ Base tables are revoked from browser roles. Public SECURITY INVOKER RPCs call pr
 
 ## Numbers and dates
 
-India time; weeks start Monday. Money sales use the selected month's order dates, excluding cancelled orders. Collected uses actual client payment dates and ignores voids. Client outstanding is the balance of orders entered through the selected month end, after receipts through that date. Salary totals use actual recorded salary payment dates, including advances; direct Salary-category expenses are included once. Purchase totals use actual purchase payments, excluding unpaid balances. Other expenses use expense dates, excluding Salary entries. Total money out = salaries + purchases + other expenses; Net = collected − total money out. Enter each payment once.
+India time; weeks start Monday. Money sales use the selected month's order dates, excluding cancelled orders. Collected uses actual client payment dates and ignores voids. Client outstanding is the balance of orders entered through the selected month end, after receipts through that date. Salary totals use actual recorded salary payment dates, including advances; direct Salary-category expenses are included once. Purchase totals use actual purchase payments, excluding unpaid balances. Other expenses use expense dates, excluding Salary entries. Total money out = salaries + purchases + other expenses; Net Cash Flow = collected − total money out (not profit). Enter each payment once.
 
 Salary profiles remember name, amount, frequency and payment day. Record Paid adds a dated payment without creating a new profile. Weekly status on the current month refers to the current week; historical cards show recorded payment count and total. Existing salary periods and payments are preserved, with payments copied into the new ledger once. Existing Paid purchases receive a payment on their purchase date; historical Part paid purchases require recording their actual payments because the old system did not store those amounts/dates.
 
@@ -63,3 +63,6 @@ Phone screens use a reference-inspired peach/lilac background, rounded white car
 
 
 Orders use compact cards showing client/reference, outfit/stage, due date, balance, payment status and order total. Multi-outfit orders expand vertically. Delivered requires confirmation, keeps payments unchanged, and stores prior garment stages for Undo delivery; older delivered records without a snapshot reopen at Ready. The Delivered filter complements Active and All. Clients use clickable names with phone numbers on the right. The in-order New Client dialog keeps Cancel/Save visible while fields scroll and preserves the order draft. Expense categories include Dye and Miscellaneous; legacy Other expense entries are renamed without changing amounts.
+
+## Automatic invoices
+Invoices use the permanent cream textured Label Muskan template. Each order receives a unique stored invoice number and invoice date; the authenticated invoice RPC reads current client, garment and non-void payment records. Generate after order creation or from order details, preview, download PDF, or share the file. Supporting browsers offer file sharing (choose WhatsApp); otherwise the PDF downloads and must be attached manually in the opened chat. Client data never goes to an external PDF service. PDF export uses pinned, self-hosted html2canvas and jsPDF; their licenses and integrity manifest are in public/vendor. Client and payment permissions are both required.
