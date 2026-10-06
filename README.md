@@ -54,3 +54,6 @@ Migrations 001, 002, 003, 004, then the timestamped mobile_home_task_clients mig
 ## Deployment
 
 Nginx serves `/var/www/labelmuskan-current`, a symlink to a versioned directory in `/var/www/labelmuskan-releases/`. Upload public files into a new release, check them, then switch the symlink atomically. Preserve the existing Nginx TLS configuration and Certbot renewal. Original releases remain available. Database migration 003 requires the corresponding RPC frontend; rolling back only the static UI to an earlier direct-table version will not work.
+
+
+More → Planned modules offers 38 optional ideas across seven studio categories, with scenario labels, Build next / Consider later selections and a downloadable shortlist. This is an owner-only planning catalogue, not activated functionality. Choices are stored per signed-in owner on the current device and do not sync between devices. The larger, stronger text retains the six-item phone navigation.

@@ -1,3 +1,4 @@
+import {moduleGroups,plannedModules,shortlistText} from './planned-modules.js';
 import {shiftMonth,monthLabel,purchasePaymentsFor,purchaseBalance,profilePayments,profileStatus} from './wallet.js';
 import {invoiceHTML} from './invoice.js';
 import {getSession,signIn,signOut,request,workspace,rpc,save} from './api.js';
@@ -39,14 +40,14 @@ async function load(silent=false){
 async function logout(){dialog.close();await signOut();data=Object.fromEntries(tables.map(k=>[k,[]]));login();}
 
 const navigation=[['home','Home','◈'],['orders','Orders','▤'],['money','Money','₹'],['more','More','⋯'],['customers','Clients','○'],['studio','Studio','◇']];
-const permissions={home:'home',orders:'orders',customers:'clients',studio_pieces:'studio',jobs:'production',tasks:'tasks',events:'calendar',payments:'payments',expenses:'expenses',purchases:'purchases',salaries:'salaries',salary_profiles:'salaries',inventory:'owner',members:'owner'};
+const permissions={home:'home',orders:'orders',customers:'clients',studio_pieces:'studio',jobs:'production',tasks:'tasks',events:'calendar',payments:'payments',expenses:'expenses',purchases:'purchases',salaries:'salaries',salary_profiles:'salaries',inventory:'owner',members:'owner',planned:'owner'};
 const visibleGroup=k=>k==='studio'?['studio','production','calendar'].some(can):k==='money'?['payments','expenses','purchases','salaries'].some(can):k==='more'?['tasks','calendar','owner'].some(can):can(permissions[k]);
 function render(){
  if(!visibleGroup(group))group=navigation.find(([k])=>visibleGroup(k))?.[0]||'more';
  let tabs=[];
  if(group==='studio')tabs=[['studio_pieces','Pieces'],['jobs','Karigar / Production'],['events','Calendar']];
  if(group==='money')tabs=[['payments','Payments'],['expenses','Expenses'],['purchases','Purchases'],['salaries','Salaries']];
- if(group==='more')tabs=[['tasks','Tasks'],['events','Calendar'],['members','Team access'],['inventory','Stock register']];
+ if(group==='more')tabs=[['tasks','Tasks'],['events','Calendar'],['members','Team access'],['inventory','Stock register'],['planned','Planned modules']];
  tabs=tabs.filter(([k])=>can(permissions[k]));
  if(tabs.length){const current=group==='studio'?studioTab:group==='money'?moneyTab:moreTab;view=tabs.some(([k])=>k===current)?current:tabs[0][0];}else view=group;
  const title=navigation.find(([k])=>k===group)?.[1]||'Workspace';
@@ -64,6 +65,7 @@ function bindRecords(root=document){
  root.querySelectorAll('[data-salary-detail]').forEach(b=>b.onclick=()=>salaryDetail(b.dataset.salaryDetail));
 }
 function wire(){
+ wirePlan();
  document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{group=b.dataset.view;search='';orderFilter='pending';render();});
  document.querySelector('#logout').onclick=logout;document.querySelector('#refresh').onclick=()=>load(true);
  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{if(group==='studio')studioTab=b.dataset.tab;else if(group==='money')moneyTab=b.dataset.tab;else moreTab=b.dataset.tab;search='';orderFilter='pending';render();});
@@ -84,7 +86,12 @@ function wire(){
  document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{orderFilter=b.dataset.filter;render();});
 
 }
-function content(){if(group==='money')return moneyPage();if(view==='home')return home();if(view==='members')return memberPage();if(view==='events')return calendarPage();if(view==='payments')return paymentsPage();return recordPage();}
+function planKey(){return 'lm-planned-modules:'+profile.user_id;}
+function planChoices(){try{return JSON.parse(localStorage.getItem(planKey())||'{}')||{};}catch{return {};}}
+function plannedPage(){const choices=planChoices(),picked=plannedModules.filter(m=>choices[m.id]);return `<div class="planned-page">${section('Your next studio chapter',`<div class="plan-intro"><p>Choose the modules you would like us to build next.</p><small>Ideas only · ${picked.length} selected · Saved on this device</small>${picked.length?action('Download shortlist','id="download-plan"'):''}</div>`)}<div class="plan-groups">${moduleGroups.map((g,i)=>`<details class="plan-group" ${i===0?'open':''}><summary>${esc(g.name)}<span>${g.modules.filter(([id])=>choices[id]).length} / ${g.modules.length}</span></summary><div class="plan-options">${g.modules.map(([id,title,description,scenario])=>`<article class="plan-option ${choices[id]?'chosen':''}"><div><h3>${esc(title)}</h3><p>${esc(description)}</p><small>${esc(scenario)}</small></div><label>Build priority<select data-plan-choice="${id}" aria-label="Build priority for ${esc(title)}"><option value="" ${!choices[id]?'selected':''}>Not chosen</option><option value="next" ${choices[id]==='next'?'selected':''}>Build next</option><option value="later" ${choices[id]==='later'?'selected':''}>Consider later</option></select></label></article>`).join('')}</div></details>`).join('')}</div></div>`;}
+function wirePlan(){document.querySelectorAll('[data-plan-choice]').forEach(select=>select.onchange=()=>{const choices=planChoices();if(select.value)choices[select.dataset.planChoice]=select.value;else delete choices[select.dataset.planChoice];try{localStorage.setItem(planKey(),JSON.stringify(choices));const openGroups=[...document.querySelectorAll('.plan-group')].map(g=>g.open),scrollY=window.scrollY,id=select.dataset.planChoice;render();document.querySelectorAll('.plan-group').forEach((g,i)=>g.open=openGroups[i]);window.scrollTo(0,scrollY);document.querySelector(`[data-plan-choice="${id}"]`)?.focus({preventScroll:true});}catch{notify('Unable to save choices on this device.');}});document.querySelector('#download-plan')?.addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([shortlistText(planChoices())],{type:'text/plain;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='Label-Muskan-Planned-Modules.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});}
+
+function content(){if(view==='planned')return plannedPage();if(group==='money')return moneyPage();if(view==='home')return home();if(view==='members')return memberPage();if(view==='events')return calendarPage();if(view==='payments')return paymentsPage();return recordPage();}
 const due=o=>o.next_delivery||o.due_date;
 const itemsFor=id=>data.order_items.filter(i=>i.order_id===id);
 function deliveryRows(orders){return table(['Order / client','Products / stage','Delivery / fitting',...(can('payments')?['Balance']:[]),''],sortOrders(orders).map(o=>[`<b>${esc(o.reference)}</b><small>${esc(customer(o))}</small>${badge(!activeOrder(o)?o.status:due(o)&&due(o)<today()?'Overdue':due(o)&&due(o)<=addDays(today(),3)?'Due soon':'Active')}`,itemsFor(o.id).map(i=>`<div class="garment">${esc(i.name)} ${badge(i.status)}</div>`).join('')||badge(o.status),`${date(due(o))}${o.fitting_date?`<small>Fitting · ${date(o.fitting_date)}</small>`:''}`,...(can('payments')?[moneyCell(balance(data,o))]:[]),action('Open',`data-detail="${o.id}"`)]));}
