@@ -1,6 +1,6 @@
 # Label Muskan Studio
 
-Private operations dashboard at https://labelmuskan.online. Soft beige, nude and mauve interface with six sections: Home, Orders, Clients, Studio, Money, More / Settings. No graphs or bank syncing.
+Private operations dashboard at https://labelmuskan.online. Warm blush/ivory interface with plum actions and pastel lavender, sage, peach and dusty pink states. Six sections: Home, Orders, Money, More, Clients, Studio. Phone navigation shows all six in one row with 44px-high targets; mobile record tables become labelled vertical cards. No graphs or bank syncing.
 
 ## Approved infrastructure
 
