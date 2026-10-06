@@ -57,3 +57,6 @@ Nginx serves `/var/www/labelmuskan-current`, a symlink to a versioned directory 
 
 
 More → Planned modules offers 38 optional ideas across seven studio categories, with scenario labels, Build next / Consider later selections and a downloadable shortlist. This is an owner-only planning catalogue, not activated functionality. Choices are stored per signed-in owner on the current device and do not sync between devices. The larger, stronger text retains the six-item phone navigation.
+
+
+Phone screens use a reference-inspired peach/lilac background, rounded white cards, charcoal pill actions and bold sans-serif headings. The compact six-item navigation stays in a single row. The Home order-count section uses a dark card; operational data and workflows are unchanged.
