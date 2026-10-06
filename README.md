@@ -9,6 +9,7 @@ GitHub `blendlifeindia/labelmuskan`, Supabase `xybqwszhkbiucgextwog`, RackNerd V
 ## Daily use
 
 - Home: quick tasks, delivery urgency, four business figures, production counts, upcoming deliveries and fittings.
+- New order: Client → manual order number and blank order date → delivery / fitting → garments → automatic total → advance / balance → Create Order. No payment date/mode, assignments, order notes or per-product delivery overrides are requested at creation. The initial advance uses the entered order date and “Other” payment mode; later receipts use + Add Payment. Extra fields remain in Edit order.
 - Orders: multiple garments in one client order, each with its own description, quantity, unit price, fabric, delivery override, production stage and notes. Total is the sum of quantity × price. Overall stage is the earliest unfinished stage across non-cancelled products. Owner can cancel the whole order explicitly.
 - Clients: contacts, measurements/date, alteration notes, fitting preferences and current/past orders. Add a new client inside an order using a separate popup; the draft stays intact. A saved client remains if the order draft is cancelled.
 - Studio: collection pieces separate from client orders; samples, store, shoots, lookbooks, new designs and store alterations. Karigar jobs link to exactly one client garment or studio piece. Jobs do not automatically change the garment stage or create an expense; record these when they occur.
