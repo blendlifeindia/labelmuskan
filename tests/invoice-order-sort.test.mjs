@@ -12,3 +12,8 @@ test('recent orders use descending order date, then creation time',()=>{
  const rows=[{id:'old',order_date:'2026-09-30',invoice_number:'LM-2026-999'},{id:'new',order_date:'2026-10-07',created_at:'2026-10-07T12:00:00Z'},{id:'earlier',order_date:'2026-10-07',created_at:'2026-10-07T09:00:00Z'},{id:'blank'}];
  assert.deepEqual(sortOrdersRecent(rows).map(o=>o.id),['new','earlier','old','blank']);
 });
+
+import {sortOrdersLatestInvoice} from '../public/domain.js';
+test('latest invoice first regardless of order date, missing invoices last',()=>{
+ assert.deepEqual(sortOrdersLatestInvoice([{id:'low',invoice_number:'LM-2026-2',order_date:'2026-10-07'},{id:'high',invoice_number:'LM-2026-10',order_date:'2026-03-01'},{id:'blank'}]).map(o=>o.id),['high','low','blank']);
+});
