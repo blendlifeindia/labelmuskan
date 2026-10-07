@@ -1,5 +1,6 @@
 import {today,addDays,monthRange,inRange,sum} from './domain.js';
 export function overviewRange(preset,from='',to='',day=today()){
+ if(preset==='all')return ['2026-03-01',day];
  if(preset==='today')return [day,day];
  if(preset==='yesterday'){const d=addDays(day,-1);return [d,d];}
  if(preset==='last'){const d=new Date(day+'T12:00:00Z');d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()-1);return monthRange(d.toISOString().slice(0,7));}
