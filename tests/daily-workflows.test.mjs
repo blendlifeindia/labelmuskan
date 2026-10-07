@@ -1,0 +1,4 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {expenseBatch,batchTotal} from '../public/quick-expenses.js';
+test('quick expense sheet skips untouched rows, totals decimals and validates every used row',()=>{const rows=[{category:'Studio',description:'Courier',amount:'850.25'},{category:'Fabric',description:'Organza',amount:'1200.50'},{category:'Miscellaneous',description:'',amount:''}];assert.equal(batchTotal(rows),2050.75);assert.deepEqual(expenseBatch(rows),[{category:'Studio',description:'Courier',amount:850.25},{category:'Fabric',description:'Organza',amount:1200.5}]);assert.throws(()=>expenseBatch([{description:'',amount:'100'}]),/description/);assert.throws(()=>expenseBatch([{description:'Courier',amount:'0'}]),/positive/);assert.throws(()=>expenseBatch([{description:'',amount:''}]),/at least one/);});

@@ -18,6 +18,13 @@ if(process.env.EXPENSE_SHEET_QA){
  data.salary_profiles[0].job_role='Master cutter';
 }
 data.influencer_marketing=[{id:randomUUID(),influencer_name:'Preview Influencer',outfit_name:'Ivory drape set',agency_name:'Preview Agency',sent_through:'Studio courier',sent_date:day,collaboration:'Barter',status:'Sent'}];
+if(process.env.DAILY_QA){
+ data.customers.push(...Array.from({length:110},(_,i)=>({id:randomUUID(),name:'Sample Client '+String(i+1).padStart(3,'0'),phone:'9000000000'})));
+ data.orders.push(...data.customers.slice(-110).map((c,i)=>({id:randomUUID(),reference:'TEST-'+String(i+1).padStart(3,'0'),customer_id:c.id,customer_name:c.name,order_date:day,due_date:addDays(day,i+1),amount:1000,status:'New Order',product:'Sample outfit',quantity:1})));
+ data.order_items.push(...data.orders.slice(-110).map(o=>({id:randomUUID(),order_id:o.id,name:o.product,quantity:1,price:o.amount,status:o.status})));
+}
+let archives=[];
+function mockDeleteRows(table,id){const rows={[table]:data[table].filter(r=>r.id===id)};let changed=true;const edges=[['orders','customer_id','customers'],['order_items','order_id','orders'],['order_payments','order_id','orders'],['expenses','order_id','orders'],['purchases','order_id','orders'],['purchase_payments','purchase_id','purchases'],['salary_payouts','profile_id','salary_profiles'],['salary_payments','salary_id','salaries'],['jobs','order_item_id','order_items'],['jobs','studio_piece_id','studio_pieces'],['tasks','order_id','orders'],['tasks','customer_id','customers'],['events','order_id','orders']];while(changed){changed=false;for(const [child,key,parent]of edges){if(!rows[parent])continue;const ids=rows[parent].map(r=>r.id),newRows=(data[child]||[]).filter(r=>ids.includes(r[key])&&!(rows[child]||[]).some(x=>x.id===r.id));if(newRows.length){rows[child]=[...(rows[child]||[]),...newRows];changed=true;}}}return rows;}
 let role='owner';
 const send=(res,status,body)=>{res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(body));};
 http.createServer(async(req,res)=>{
@@ -27,6 +34,11 @@ http.createServer(async(req,res)=>{
   if(path.startsWith('/auth/')){let raw='';for await(const c of req)raw+=c;if(u.searchParams.get('grant_type')==='password')role=JSON.parse(raw).email.split('@')[0];send(res,200,{access_token:role,refresh_token:role,expires_at:Math.floor(Date.now()/1000)+3600,user:{id:role,email:role+'@local.test'}});return;}
   if(path.startsWith('/rest/')){
    let body={};if(req.method!=='GET'){let raw='';for await(const c of req)raw+=c;body=raw?JSON.parse(raw):{};}
+   if(path==='/rest/v1/rpc/lm_save_expense_batch'){const ids=[];for(const r of body.p_rows){const row={id:randomUUID(),...r,expense_date:body.p_date||day,paid_by:body.p_paid_by,payment_mode:body.p_mode,status:'Paid'};data.expenses.push(row);ids.push(row.id);}send(res,200,{saved:true,ids,count:ids.length});return;}
+   if(path==='/rest/v1/rpc/lm_delete_preview'){const rows=mockDeleteRows(body.p_table,body.p_id),root=rows[body.p_table][0];send(res,200,{label:root.reference||root.name||root.item||root.description||root.staff_name,token:'synthetic-token',counts:Object.fromEntries(Object.entries(rows).map(([k,v])=>[k,v.length]))});return;}
+   if(path==='/rest/v1/rpc/lm_delete_record'){const rows=mockDeleteRows(body.p_table,body.p_id),root=rows[body.p_table][0],archive={id:randomUUID(),label:root.reference||root.name||root.item||root.description||root.staff_name,root_table:body.p_table,deleted_at:new Date().toISOString(),count:Object.values(rows).reduce((v,r)=>v+r.length,0),records:rows};archives.push(archive);for(const [k,v]of Object.entries(rows))data[k]=data[k].filter(r=>!v.some(x=>x.id===r.id));send(res,200,{saved:true,archive_id:archive.id});return;}
+   if(path==='/rest/v1/rpc/lm_deleted_list'){send(res,200,archives.map(({records,...rest})=>rest));return;}
+   if(path==='/rest/v1/rpc/lm_restore_record'){const archive=archives.find(a=>a.id===body.p_id);for(const [k,v]of Object.entries(archive.records))data[k].push(...v);archives=archives.filter(a=>a.id!==body.p_id);send(res,200,{saved:true});return;}
    if(path==='/rest/v1/rpc/lm_set_expense_void'){const row=data[body.p_table].find(r=>r.id===body.p_id);row.voided=body.p_voided;send(res,200,{saved:true,id:row.id});return;}
    if(path==='/rest/v1/rpc/lm_invoice'){const order=data.orders.find(o=>o.id===body.p_order_id);send(res,200,{order,client:data.customers.find(c=>c.id===order.customer_id),items:data.order_items.filter(i=>i.order_id===order.id),payments:data.order_payments.filter(p=>p.order_id===order.id&&!p.voided)});return;}
    if(path==='/rest/v1/rpc/lm_month_money'){send(res,200,cashMonth(data,body.p_month));return;}

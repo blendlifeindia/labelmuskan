@@ -3,6 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": { "start": "node scripts/serve.mjs", "check": "node --check public/app.js && node --check public/api.js && node --check public/domain.js && node --check public/fields.js && node --check public/expense-sheet.js && node --check public/wallet.js && node --check public/invoice.js && node --check public/planned-modules.js", "test": "node --test tests/*.test.mjs" },
-  "engines": { "node": ">=22" }
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "check": "node --check public/app.js && node --check public/api.js && node --check public/domain.js && node --check public/fields.js && node --check public/expense-sheet.js && node --check public/wallet.js && node --check public/invoice.js && node --check public/planned-modules.js && node --check public/marketing.js && node --check public/quick-expenses.js",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }
