@@ -39,7 +39,7 @@ India time; weeks start Monday. Money sales use the selected month's order dates
 
 Salary profiles remember name, amount, frequency and payment day. Record Paid adds a dated payment without creating a new profile. Weekly status on the current month refers to the current week; historical cards show recorded payment count and total. Existing salary periods and payments are preserved, with payments copied into the new ledger once. Existing Paid purchases receive a payment on their purchase date; historical Part paid purchases require recording their actual payments because the old system did not store those amounts/dates.
 
-Individual orders offer Invoice → Print / Save PDF. The minimal couture template uses actual outfits, totals and non-void receipts. It defaults to Label Muskan and labelmuskan.online; it does not invent GST, taxes or contact details.
+Individual orders offer Generate Invoice → Preview → Download PDF / Share / Send on WhatsApp. The invoice uses current saved outfits, totals and non-void receipts, and the studio contact details supplied by Muskan. It does not add taxes or GST.
 
 Advances and subsequent receipts form one payment history. Payment amounts must be positive and cannot exceed the outstanding balance. Incorrect payments can be voided, preserving history. Orders/salary values cannot be lowered below already received/paid amounts. Product removal is blocked when a karigar job references it; retain the product or change its job link first.
 
@@ -70,3 +70,8 @@ Invoices use the permanent cream textured Label Muskan template. Each order rece
 Expense rows are kept within the phone width. Tap an item/person to manage it. Pending expenses are excluded from cash totals; marking Paid includes them by the recorded date. Void/restore retains the underlying record. Voided purchases exclude their receipts from cash summaries without modifying receipt history. Salary rows use actual recorded payments and the saved profile frequency as Period; pending profiles can be archived without changing past payments.
 
 New orders leave fitting date and Payment Mode optional. Payment Mode offers blank, UPI or Cash; the selected mode is saved on the order and initial advance receipt. Editing the mode updates that advance receipt while later payments retain their own modes. Invoices use the manually entered order date as invoice date, read current saved details and omit blank fitting/payment fields.
+
+
+Invoice reference layout: LM monogram and wordmark at left, studio contacts at right, large INVOICE heading, four reference fields including the manual order number, client name/phone, five product columns, Payment Mode/Paid Amount, and Total/Paid/Balance Due. Fabric, client address, production stages and internal notes are excluded from both the customer template and invoice RPC. Optional fitting details appear only when saved. PDF output fits all products onto one A4 page; very long orders scale down to remain one page.
+
+Influencer Marketing is a main navigation item immediately after Money. Its compact overview opens a searchable detailed list. Add/edit collaborations with influencer/outfit, agency, dispatch channel/date, Barter/Sourcing and status. Optional JPG/PNG/WebP photos are resized to at most 480 pixels, converted to JPEG and stored privately with the record (max 300 KB encoded). There is no public image bucket or third-party image service. Owner has access; other staff require an explicit marketing grant through Team access. Existing role defaults remain unchanged.
