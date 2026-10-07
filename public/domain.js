@@ -37,3 +37,6 @@ export function orderCost(data,o){
 export const productTotal=items=>round(items.reduce((total,item)=>total+n(item.quantity)*n(item.price),0));
 export const overallStage=items=>items.filter(i=>i.status!=='Cancelled').map(i=>i.status).sort((a,b)=>stages.indexOf(a)-stages.indexOf(b))[0]||'Cancelled';
 export const rolePermissions={production:['orders','studio','production','tasks','calendar'],team:['tasks'],accounts:['payments','expenses','purchases']};
+
+// Natural invoice order, with unnumbered records last and deterministic ties.
+export const sortOrdersByInvoice=rows=>[...rows].sort((a,b)=>{const x=String(a.invoice_number||''),y=String(b.invoice_number||'');return (x&&y?x.localeCompare(y,'en',{numeric:true}):x?-1:y?1:0)||String(a.reference||'').localeCompare(String(b.reference||''),'en',{numeric:true})||String(a.id||'').localeCompare(String(b.id||''));});
