@@ -180,3 +180,4 @@ body.modal-open{position:fixed;width:100%;overflow:hidden;overscroll-behavior:no
 .edit-order-payments .summary>div{padding:8px;min-width:0}
 .edit-order-payments .summary dt{font-size:11px}
 .edit-order-payments .summary dd{font-size:16px;margin:4px 0 0;overflow-wrap:anywhere}
+.edit-order-payments .summary>div{display:block}
