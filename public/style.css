@@ -192,3 +192,31 @@ body.modal-open{position:fixed;width:100%;overflow:hidden;overscroll-behavior:no
 .expense-month-totals strong{color:#42382e;white-space:nowrap}
 .expense-month-totals .expense-month-total{border-top:1px solid #ded3c0;margin-top:8px;padding-top:14px;font-weight:700;font-size:16px}
 .expense-month-totals p{font-size:10px;color:#8a7a66;line-height:1.5;margin-top:12px}
+
+/* Reference palette: peach, blush and lavender with crisp charcoal actions. */
+:root{--ivory:#f4f1f2;--card:#fff;--ink:#252427;--muted:#777178;--plum:#29272c;--plum-deep:#151417;--dusty-pink:#b995be;--blush:#f8e6df;--pink:#f4dce3;--lavender:#ece4f7;--sage:#e2eee2;--peach:#fae5d3;--line:#e9e3ea;--sage-ink:#436b4d;--peach-ink:#92603b;--berry-ink:#94516a;--accent:var(--plum)}
+body{background:radial-gradient(ellipse at 90% 0%,#e9cbee 0,transparent 48%),radial-gradient(ellipse at 0% 8%,#f3dac8 0,transparent 52%),linear-gradient(150deg,#f5edf0,#efeff2 65%);background-attachment:fixed}
+aside{background:linear-gradient(120deg,#f4dbcebc,#eacfeeaa);border-color:#ffffff80}
+.workspace,.workspace:has(.daily-expense-page){background:transparent}
+nav{background:#ffffffcf}
+nav button.active,.primary,.daily-expense-tabs button.primary,.daily-expense-heading button{background:linear-gradient(145deg,#39373d,#19181c);color:#fff;border-color:#302d33}
+.primary:hover,.daily-expense-heading button:hover{background:linear-gradient(145deg,#454149,#252228)}
+.panel,.metrics article,.client-studio-card,.order-studio-card{background:#ffffffed;border-color:#ffffffb3!important}
+.order-financials>div,.money-entry{background:#f5f3f6}
+.order-financials .balance-due{background:var(--peach)}.order-financials .balance-clear{background:var(--sage)}
+dialog:not(.invoice-dialog){background:linear-gradient(145deg,#f7e5dc,#edddf1 45%,#f1f0f3);border-color:#ffffffa6}
+.modal-scroll input,.modal-scroll select,.modal-scroll textarea{border-color:var(--line);background:#fff}
+.product-form{background:#ffffff99!important;border-color:#ffffffc7!important}.order-total{background:var(--lavender)}
+.optional-tag{background:#ede9ef;color:var(--muted)}
+.daily-expense-page,.daily-expense-heading h2,.daily-expense-row,.expense-month-totals strong{color:var(--ink)}
+.daily-expense-tabs,.daily-expense-list,.daily-expense-row,.expense-month-totals,.expense-month-totals .expense-month-total{border-color:#dcd5df}
+.daily-expense-tabs button,.daily-expense-page .expense-status-tabs button,.daily-expense-page .expense-filter-panel summary,.daily-expense-page .expense-filters label,.daily-expense-row time,.daily-expense-row time small,.daily-expense-description small,.daily-expense-amount .daily-status,.daily-expense-foot,.daily-expense-empty,.daily-expense-empty small,.expense-month-totals h3,.expense-month-totals>div,.expense-month-totals p{color:var(--muted)}
+.daily-expense-search,.daily-expense-page .expense-filters input,.daily-expense-page .expense-filters select,.daily-expense-page .expense-pagination button{background:#ffffffdd;border-color:var(--line)}
+.daily-expense-search>span,.daily-expense-chevron{color:#a18ba5}
+.daily-expense-search:focus-within,.daily-expense-row:focus-visible{outline-color:var(--dusty-pink)}
+.daily-expense-row:hover{background:#ffffff80}
+.daily-expense-page .expense-status-tabs button.primary{background:var(--lavender);color:#5e4773}
+.daily-expense-page .expense-filters button,.expense-month-selector button{border-color:#ded5e3;color:var(--ink)}
+.expense-month-selector input{color:var(--ink)}
+.daily-status.is-paid:before{color:var(--sage-ink)}.daily-status.is-pending:before,.daily-status.is-partial:before{color:var(--peach-ink)}
+.login-brand{background:linear-gradient(145deg,#f4dacb,#e7cfef)}
