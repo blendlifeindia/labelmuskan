@@ -181,3 +181,14 @@ body.modal-open{position:fixed;width:100%;overflow:hidden;overscroll-behavior:no
 .edit-order-payments .summary dt{font-size:11px}
 .edit-order-payments .summary dd{font-size:16px;margin:4px 0 0;overflow-wrap:anywhere}
 .edit-order-payments .summary>div{display:block}
+.edit-order-payments .summary dd{max-width:none;text-align:left;font-size:14px;white-space:nowrap}
+.expense-month-selector{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0 20px}
+.expense-month-selector button{background:transparent;border:1px solid #ded3c0;border-radius:50%;width:40px;height:40px;padding:0;font-size:24px;color:#514237}
+.expense-month-selector label{min-width:0}
+.expense-month-selector input{background:transparent;border:0;color:#514237;font-weight:600;width:185px;min-width:0;padding:8px;font-size:15px;text-align:center}
+.expense-month-totals{border-top:1px solid #cec0a7;margin-top:24px;padding:18px 0 0;max-width:1080px}
+.expense-month-totals h3{font-size:13px;font-weight:600;color:#746751;margin:0 0 14px}
+.expense-month-totals>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px;color:#615545}
+.expense-month-totals strong{color:#42382e;white-space:nowrap}
+.expense-month-totals .expense-month-total{border-top:1px solid #ded3c0;margin-top:8px;padding-top:14px;font-weight:700;font-size:16px}
+.expense-month-totals p{font-size:10px;color:#8a7a66;line-height:1.5;margin-top:12px}

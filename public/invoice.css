@@ -24,3 +24,49 @@
 .studio-invoice .si-settlement{gap:25px;margin-top:25px}.studio-invoice .si-payment p{letter-spacing:0;font-size:11px;line-height:1.7}.studio-invoice .si-payment strong{font-weight:500}.studio-invoice .si-totals{background:#eaddcc;width:275px}
 .studio-invoice .si-footer{margin-top:auto;padding-top:20px;border-top:0}.studio-invoice .si-footer::before{content:'';display:block;border-top:1px solid #b8aa96;margin-bottom:20px}.studio-invoice .si-footer p{font-size:43px;line-height:1.3}.studio-invoice .si-footer span{font-size:8px;letter-spacing:2px}
 .studio-invoice.si-compact .si-products td{padding:8px;font-size:11px}.studio-invoice.si-compact .si-title{margin-top:20px;font-size:60px}.studio-invoice.si-compact .si-client{padding:18px 8px}.studio-invoice.si-compact .si-footer{padding-top:18px}
+/* Approved ivory and champagne luxury stationery, shared by preview and PDF. */
+@font-face{font-family:'LM Signature';src:url('/fonts/GreatVibes-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:block}
+.studio-invoice{position:relative;isolation:isolate;min-height:1018px;padding:48px 44px 36px;color:#3d2c1d;background-color:#f8f4eb}
+.studio-invoice .si-frame{position:absolute;inset:15px;border:1px solid #b39a68;pointer-events:none;z-index:-1}
+.studio-invoice .si-frame::before{content:'';position:absolute;inset:4px;border:1px solid #c6b38e}
+.studio-invoice .si-frame i{position:absolute;width:17px;height:17px;border:1px solid #b39a68;border-radius:0 0 100% 0;background:#f8f4eb;left:-1px;top:-1px}
+.studio-invoice .si-frame i:nth-child(2){left:auto;right:-1px;transform:rotate(90deg)}
+.studio-invoice .si-frame i:nth-child(3){left:auto;right:-1px;top:auto;bottom:-1px;transform:rotate(180deg)}
+.studio-invoice .si-frame i:nth-child(4){top:auto;bottom:-1px;transform:rotate(270deg)}
+.studio-invoice .si-header{display:flex;flex-direction:column;gap:12px;text-align:center;align-items:center}
+.studio-invoice .si-logo{height:42px;width:66px;font-size:44px;color:#927748}
+.studio-invoice .si-logo span:first-child{left:7px;top:-5px}.studio-invoice .si-logo span:last-child{left:20px;top:6px;font-size:37px}
+.studio-invoice .si-brand h2{font-family:Georgia,'Times New Roman',serif;font-size:27px;font-weight:400;letter-spacing:6px;margin:10px 0 0}
+.studio-invoice .si-contact{font-family:Arial,sans-serif;font-size:10px;line-height:1.6;color:#77644f;max-width:540px}
+.studio-invoice .si-contact p+p{margin-top:4px}
+.studio-invoice .si-title{text-align:center;font-size:66px;letter-spacing:4px;margin:30px 0 23px;line-height:1.1;color:#382412}
+.studio-invoice .si-title::before{content:'';display:block;width:43px;height:1px;margin:0 auto 23px;background:#a78b56}
+.studio-invoice .si-reference{background:transparent;border-top:1px solid #b9a589;border-bottom:0;padding:17px 0;gap:0}
+.studio-invoice .si-reference>div{padding:0 14px;border-right:1px solid #cbbb9f}
+.studio-invoice .si-reference>div:first-child{padding-left:0}.studio-invoice .si-reference>div:last-child{padding-right:0}
+.studio-invoice .si-reference span{font-family:Arial,sans-serif;letter-spacing:1.1px;font-size:8px;color:#75644e}
+.studio-invoice .si-reference strong{display:block;font-size:11px;color:#493722;font-weight:400;line-height:1.5}
+.studio-invoice .si-client{padding:23px 0 27px}
+.studio-invoice h3{font-family:Arial,sans-serif;font-size:10px;letter-spacing:2px;font-weight:500;color:#4d3822}
+.studio-invoice .si-client>strong{font-size:23px;color:#382412;margin-bottom:7px}
+.studio-invoice .si-client p{font-family:Arial,sans-serif;color:#76644e;font-size:11px}
+.studio-invoice .si-products th{background:#e9dfcf;border:1px solid #c8b99f;font-family:Arial,sans-serif;font-size:8px;font-weight:600;letter-spacing:.7px;padding:12px 7px;color:#513e25}
+.studio-invoice .si-products td{border:1px solid #d0c2ad;padding:13px 7px;font-family:Arial,sans-serif;color:#51412f;font-size:10px;line-height:1.5}
+.studio-invoice .si-products td:nth-child(n+4){font-variant-numeric:tabular-nums}
+.studio-invoice .si-blank-row td{height:36px;padding:0}
+.studio-invoice .si-settlement{gap:28px;margin-top:22px}
+.studio-invoice .si-payment p{font-family:Arial,sans-serif;color:#685641;font-size:10px;line-height:1.7}
+.studio-invoice .si-payment h3{margin-top:8px}
+.studio-invoice .si-totals{width:265px;background:#e9dfcf;padding:10px 16px;border:1px solid #e0d3bd}
+.studio-invoice .si-totals>div{font-family:Arial,sans-serif;font-size:10px;padding:10px 0;gap:8px}
+.studio-invoice .si-totals dt{letter-spacing:1px;font-weight:400}.studio-invoice .si-totals dd{font-weight:400;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.studio-invoice .si-totals .si-balance{border-top:1px solid #bda987;padding-top:12px;color:#382412}
+.studio-invoice .si-balance dt,.studio-invoice .si-balance dd{font-weight:600}
+.studio-invoice .si-footer{margin-top:auto;padding-top:24px;color:#756044}
+.studio-invoice .si-footer::before{border-color:#b8a489;margin-bottom:14px}
+.studio-invoice .si-footer p{font-family:'LM Signature',cursive;font-style:normal;font-size:51px;font-weight:400;line-height:1.35;color:#49331b;margin:0 0 8px}
+.studio-invoice .si-footer span{font-family:Arial,sans-serif;font-size:8px;letter-spacing:1.9px;color:#665239}
+.studio-invoice .si-footer span::before{content:'';display:block;width:34px;height:1px;background:#a68a53;margin:0 auto 12px}
+.studio-invoice.si-compact .si-title{margin-top:22px;font-size:55px}.studio-invoice.si-compact .si-products td{padding:7px;font-size:10px}
+.studio-invoice .si-frame{border:3px double #b39a68}
+.studio-invoice .si-frame::before{display:none}
