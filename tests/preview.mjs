@@ -3,6 +3,7 @@ import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import {randomUUID} from 'node:crypto';
+import {rangeSummary} from '../public/dashboard-view.js';
 import {cashMonth} from '../public/wallet.js';
 import {today,addDays} from '../public/domain.js';
 const day=today(),client=randomUUID(),oid=randomUUID(),root=resolve('public');
@@ -41,6 +42,7 @@ http.createServer(async(req,res)=>{
    if(path==='/rest/v1/rpc/lm_restore_record'){const archive=archives.find(a=>a.id===body.p_id);for(const [k,v]of Object.entries(archive.records))data[k].push(...v);archives=archives.filter(a=>a.id!==body.p_id);send(res,200,{saved:true});return;}
    if(path==='/rest/v1/rpc/lm_set_expense_void'){const row=data[body.p_table].find(r=>r.id===body.p_id);row.voided=body.p_voided;send(res,200,{saved:true,id:row.id});return;}
    if(path==='/rest/v1/rpc/lm_invoice'){const order=data.orders.find(o=>o.id===body.p_order_id);send(res,200,{order,client:data.customers.find(c=>c.id===order.customer_id),items:data.order_items.filter(i=>i.order_id===order.id),payments:data.order_payments.filter(p=>p.order_id===order.id&&!p.voided)});return;}
+   if(path==='/rest/v1/rpc/lm_range_money'){send(res,200,{...rangeSummary(data,body.p_from,body.p_to),from:body.p_from,to:body.p_to});return;}
    if(path==='/rest/v1/rpc/lm_month_money'){send(res,200,cashMonth(data,body.p_month));return;}
    if(path==='/rest/v1/rpc/lm_workspace'){
     const permissions={production:['orders','studio','production','tasks','calendar'],team:['tasks'],accounts:['payments','expenses','purchases']}[role]||[];const can=p=>role==='owner'||permissions.includes(p);let result={profile:{user_id:role,role,name:role==='owner'?'Muskan':role,permissions},people:[{user_id:'owner',name:'Muskan'},{user_id:'team',name:'Studio team'}]};
