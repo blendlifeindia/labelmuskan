@@ -40,3 +40,5 @@ export const rolePermissions={production:['orders','studio','production','tasks'
 
 // Natural invoice order, with unnumbered records last and deterministic ties.
 export const sortOrdersByInvoice=rows=>[...rows].sort((a,b)=>{const x=String(a.invoice_number||''),y=String(b.invoice_number||'');return (x&&y?x.localeCompare(y,'en',{numeric:true}):x?-1:y?1:0)||String(a.reference||'').localeCompare(String(b.reference||''),'en',{numeric:true})||String(a.id||'').localeCompare(String(b.id||''));});
+
+export const sortOrdersRecent=rows=>[...rows].sort((a,b)=>String(b.order_date||'').localeCompare(String(a.order_date||''))||String(b.created_at||'').localeCompare(String(a.created_at||''))||String(b.invoice_number||'').localeCompare(String(a.invoice_number||''),'en',{numeric:true})||String(b.id||'').localeCompare(String(a.id||'')));
