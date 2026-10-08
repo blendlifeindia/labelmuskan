@@ -1,5 +1,5 @@
 export const stages=['New Order','Fabric','Cutting','Stitching','Embroidery / Handwork','Fitting','Alteration','Ready','Delivered','Cancelled'];
-export const expenseCategories=['Salary','Karigar','Fabric','Dye','Packaging','Studio','Marketing/PR','Courier','Miscellaneous'];
+export const expenseCategories=['Karigar','Fabric','Dye','Packaging','Studio','Marketing/PR','Courier','Uber / Rapido','Miscellaneous','Manual'];
 export const purchaseCategories=['Fabric','Lining','Buttons','Zips','Hooks','Interfacing','Packaging','Labels','Tags','Embroidery materials','Other'];
 export const modes=['UPI','Cash','Bank transfer','Card','Other'];
 export const n=x=>Number(x)||0;
