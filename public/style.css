@@ -220,3 +220,11 @@ dialog:not(.invoice-dialog){background:linear-gradient(145deg,#f7e5dc,#edddf1 45
 .expense-month-selector input{color:var(--ink)}
 .daily-status.is-paid:before{color:var(--sage-ink)}.daily-status.is-pending:before,.daily-status.is-partial:before{color:var(--peach-ink)}
 .login-brand{background:linear-gradient(145deg,#f4dacb,#e7cfef)}
+
+/* Give the daily checklist the full first row; retain the other Home cards. */
+.mobile-home>.panel:first-child{grid-column:1/-1}
+@media(max-width:700px){
+ .mobile-home>.panel:first-child .home-task-input{flex-wrap:nowrap}
+ .mobile-home>.panel:first-child .home-task-input input{width:auto;flex:1 1 0;min-width:0}
+ .mobile-home>.panel:first-child .home-task-input button{width:auto;flex:none}
+}
