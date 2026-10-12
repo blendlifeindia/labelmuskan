@@ -1,0 +1,2 @@
+export function fabricTotals(fabric){const moves=(fabric.moves||[]).filter(m=>!m.voided);const bought=moves.filter(m=>m.kind==='Purchased').reduce((s,m)=>s+Number(m.metres),0),used=moves.filter(m=>m.kind==='Used').reduce((s,m)=>s+Number(m.metres),0);return {bought:Math.round(bought*100)/100,used:Math.round(used*100)/100,remaining:Math.round((bought-used)*100)/100};}
+export function fabricNeedsPurchase(fabric,day){return !fabric.voided&&(fabricTotals(fabric).remaining<=Number(fabric.reorder_metres||0)||!!fabric.next_purchase_date&&fabric.next_purchase_date<=day);}
