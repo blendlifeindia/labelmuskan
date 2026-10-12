@@ -228,3 +228,5 @@ dialog:not(.invoice-dialog){background:linear-gradient(145deg,#f7e5dc,#edddf1 45
  .mobile-home>.panel:first-child .home-task-input input{width:auto;flex:1 1 0;min-width:0}
  .mobile-home>.panel:first-child .home-task-input button{width:auto;flex:none}
 }
+
+.home-task-history-action{display:flex;justify-content:flex-end;padding:0 14px}.home-task-history-action button{border:0;background:transparent;font-size:11px;min-height:32px;padding:5px 8px;color:var(--muted)}
